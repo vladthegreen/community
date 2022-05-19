@@ -1,0 +1,19 @@
+{
+  "name": "modules",
+  "version": "1.0.0",
+  "description": "These are node modules the App uses to create a new Canvas and upload assets to it (from local drive or by URL), resizing the Canvas if more space is needed to accommodate the assets we are uploading.",
+  "main": "bluescapeApis.js",
+  "type": "module",
+  "dependencies": {
+    "axios": "^0.26.0",
+    "axios-retry": "^3.2.4",
+    "ffprobe-client": "^1.1.6",
+    "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
+    "probe-image-size": "^7.2.3"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
