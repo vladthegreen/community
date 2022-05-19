@@ -1,0 +1,15 @@
+{
+    "name": "get-all-sticky-notes-from-canvas-or-workspace",
+    "version": "1.0.0",
+    "description": "Bluescape sample app: retrieve text from all notes in a canvas or workspace.",
+    "main": "get-all-sticky-notes.js",
+    "author": "Bluescape",
+    "type": "module",
+    "scripts": {},
+    "license": "ISC",
+    "dependencies": {
+        "csv-writer": "^1.6.0",
+        "fs": "^0.0.1-security",
+        "yargs": "^17.2.1"
+    }
+}
