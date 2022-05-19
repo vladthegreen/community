@@ -1,0 +1,12 @@
+div.simpleTable {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
+
+div.simpleTable span {
+    margin-top: 4px;
+}
+
+.hidden {
+    display: none;
+}

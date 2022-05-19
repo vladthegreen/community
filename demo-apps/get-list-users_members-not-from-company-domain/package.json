@@ -1,0 +1,14 @@
+{
+    "name": "get-external-users",
+    "version": "1.0.0",
+    "description": "Bluescape sample app: retrieve external users.",
+    "main": "get-external-users.js",
+    "author": "Bluescape",
+    "type": "module",
+    "scripts": {},
+    "license": "ISC",
+    "dependencies": {
+        "csv-write-stream": "^2.0.0",
+        "yargs": "^17.2.1"
+    }
+}

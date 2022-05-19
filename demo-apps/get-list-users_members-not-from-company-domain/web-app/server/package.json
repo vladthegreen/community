@@ -1,0 +1,16 @@
+{
+    "name": "api",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "prestart": "npm run build-client && npm run clear-public && npm run copy-client",
+        "start": "node ./server.js",
+        "build-client": "cd ../client && npm run build",
+        "clear-public": "rm -rf ./public",
+        "copy-client": "cp -R ../client/build ./public"
+    },
+    "dependencies": {
+        "express": "~4.16.1"
+    }
+}
