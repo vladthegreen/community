@@ -94,17 +94,21 @@ modules/
         --token='<ACCESS-TOKEN>'
         --worksdpaceId=<SET_WORKSPACE_ID> 
         --canvasName='<CANVAS_NAME>' (Optional, default is "UPLOADED CONTENT -" plus the timestamp of the uplaod operation in GMT time)
-        --canvasPosition='(x,y)' (Oprional, 'x' and 'y' are integers numbers. Default is (0,0) )
+        --canvasPosition='(x,y)' (Optional, 'x' and 'y' are integers numbers. Default is (0,0) )
         ```
         - Example for upload by URL:
         ```
          --uploadmethod=URL
          --assetsToUploadByUrl='https://s3.amazonaws.com/webclienttest.bluescape.com/share/images/landscape.jpg|https://s3.amazonaws.com/webclienttest.bluescape.com/share/images/18.jpg'
+         --token='<ACCESS-TOKEN>'
+         --canvasPosition='(1000,2000)'
         ```
         - Example for upload from local drive:
         ```
         --uploadMethod=LOCAL
         --pathToFiles='/Users/littlejohnny/assets/to-upload/'
+        --token='<ACCESS-TOKEN>'
+        --canvasPosition='(1000,2000)'
         ```
 3. Run the script
    - If you hardcoded the required values in the demo app, then run the demo app: 
