@@ -1,8 +1,8 @@
 ## What are we doing here?
 
 This demo app will create a new Canvas and will upload assets (Images, Videos or Documents) into this new Canvas. 
-The heigh and width of the canvas is calculated automatically depending on the number of assets to upload. 
-You need to provide a set of initial coordinates where to locate the canvas. Once the width and height of the canvas containing all the asset to upload is calculated, the demo app verifies if the is available empty space for the canvas on the specified coordinates. If not, it looks for a available space moving to the right of the proposed initial coordinates (this direction can be changed in the app).
+The height and width of the canvas is calculated automatically depending on the number of assets to upload. 
+You need to provide a set of initial coordinates where to locate the canvas. Once the width and height of the canvas containing all the assets to upload is calculated, the demo app verifies if there is available empty space for the canvas on the specified coordinates. If not, it looks for an available space moving to the right of the proposed initial coordinates (this direction can be changed in the app).
 
 ## This demo app is implemented using GraphQL APIs
 
@@ -43,7 +43,7 @@ This demo app uses GraphQL APIs on each of the steps to obtain information about
 
 Run `npm install` to install all the needed libraries.
 
-### ffbprobe
+### ffprobe
 
 You will need to have `ffprobe` installed in your system to capture your video assets' actual width and height. The app will upload the video using their width and height. However, the videos might be displayed with different size (see in the "**How is the content displayed in the new Canvas?**" section).)
 
@@ -71,7 +71,7 @@ modules/
 
 - Go over the list of assets to upload, and filter out the ones that are not allowed to be uploaded into the workspace.
 - Calculate the number of rows and columns for the grid like display of the assets inside the new canvas.
-- Calculate the position of each assets inside the grid like display.
+- Calculate the position of each asset inside the grid like display.
 - Calculate the width and height of the new canvas to create (to contain all the assets to be uploaded).
 - Using the initially proposed position for the Canvas, find empty space in the Canvas to contain the Canvas to be created.
 - Create a new Canvas: set its position and width/height.
