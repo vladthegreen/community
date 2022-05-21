@@ -1,0 +1,4815 @@
+{
+	"info": {
+		"_postman_id": "db82d9a9-9d7f-453b-811f-ef4fad8254dd",
+		"name": "v3 REST APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "authorization test calls",
+			"item": [
+				{
+					"name": "1. authorize GetToken with Auth Code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"grant_type\":\"authorization_code\",\n    \"code\":\"<yourAccessCode>\",\n    \"client_id\":\"{{clientID}}\",\n    \"client_secret\":\"{{clientSecret}}\",\n    \"redirect_uri\":\"{{redirect_URI}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authTokenURL}}",
+							"host": [
+								"{{authTokenURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1. authorize from refresh_token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"grant_type\":\"refresh_token\",\n    \"refresh_token\":\"{{refreshToken}}\",\n    \"client_id\":\"{{clientID}}\",\n    \"client_secret\":\"{{clientSecret}}\",\n    \"redirect_uri\":\"{{redirect_URI}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authTokenURL}}",
+							"host": [
+								"{{authTokenURL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "calls to validate refresh tokens and get bearer token from auth code.  \n\nYou must get the auth code with:\nhttps://api.apps.us.bluescape.com/authorize?response_type=code&client_id=<client_id>&redirect_uri=<redirect_url>"
+		},
+		{
+			"name": "videoUpload from local",
+			"item": [
+				{
+					"name": "Post - create Video URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData)",
+									"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
+									"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
+									"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
+									"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
+									"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
+									"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
+									"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
+									"",
+									"postman.setEnvironmentVariable(\"thumb-Amz-uploadId\", jsonData.data.preview.uploadId);",
+									"postman.setEnvironmentVariable(\"thumb-Amz-Key\", jsonData.data.preview.fields.key);",
+									"postman.setEnvironmentVariable(\"thumb-X-Amz-Policy\", jsonData.data.preview.fields.Policy);",
+									"postman.setEnvironmentVariable(\"thumb-X-Amz-Signature\", jsonData.data.preview.fields[\"X-Amz-Signature\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Video\",\n    \"filename\": \"SampleVideo_1280x720_10mb.mp4\",\n    \"title\": \"SampleVideo_1280x720_10mb.mp4\",\n    \"videoFormat\": \"mp4\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 },\n    \"previewFormat\": \"jpeg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post - upload to s3 bucket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(pm.environment.get(\"Amz-Bucket\"))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "key",
+									"value": "{{Amz-Key}}",
+									"type": "text"
+								},
+								{
+									"key": "bucket",
+									"value": "{{Amz-Bucket}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Algorithm",
+									"value": "{{X-Amz-Algorithm}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Credential",
+									"value": "{{X-Amz-Credential}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Date",
+									"value": "{{X-Amz-Date}}",
+									"type": "text"
+								},
+								{
+									"key": "Policy",
+									"value": "{{X-Amz-Policy}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Signature",
+									"value": "{{X-Amz-Signature}}",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"description": "file must match imageFormat from step 1",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{s3BucketURL}}",
+							"host": [
+								"{{s3BucketURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post - upload thumb s3 bucket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(pm.environment.get(\"Amz-Bucket\"))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "key",
+									"value": "{{thumb-Amz-Key}}",
+									"type": "text"
+								},
+								{
+									"key": "bucket",
+									"value": "{{Amz-Bucket}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Algorithm",
+									"value": "{{X-Amz-Algorithm}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Credential",
+									"value": "{{X-Amz-Credential}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Date",
+									"value": "{{X-Amz-Date}}",
+									"type": "text"
+								},
+								{
+									"key": "Policy",
+									"value": "{{thumb-X-Amz-Policy}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Signature",
+									"value": "{{thumb-X-Amz-Signature}}",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"description": "file must match file previewFormat type from step 1",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{s3BucketURL}}",
+							"host": [
+								"{{s3BucketURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post - upload finalize video upload",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/assets/uploads/{{Amz-uploadId}}",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"assets",
+								"uploads",
+								"{{Amz-uploadId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "imageUpload from local",
+			"item": [
+				{
+					"name": "Post - create Image jpeg",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData)",
+									"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
+									"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
+									"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
+									"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
+									"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
+									"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
+									"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.jpg\",\n    \"title\": \"postmanImageUPload.jpg\",\n    \"imageFormat\": \"jpeg\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 }\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post - create Image tiff",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData)",
+									"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
+									"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
+									"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
+									"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
+									"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
+									"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
+									"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.tif\",\n    \"title\": \"postmanImageUPload.tif\",\n    \"imageFormat\": \"tif\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 }\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post - create Image png",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData)",
+									"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
+									"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
+									"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
+									"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
+									"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
+									"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
+									"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
+									"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.png\",\n    \"title\": \"postmanImageUPload.png\",\n    \"imageFormat\": \"png\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 },\n    \"width\":1438,\n    \"height\":378\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{public-route}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{public-route}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post - upload to s3 bucket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(pm.environment.get(\"Amz-Bucket\"))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "key",
+									"value": "{{Amz-Key}}",
+									"type": "text"
+								},
+								{
+									"key": "bucket",
+									"value": "{{Amz-Bucket}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Algorithm",
+									"value": "{{X-Amz-Algorithm}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Credential",
+									"value": "{{X-Amz-Credential}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Date",
+									"value": "{{X-Amz-Date}}",
+									"type": "text"
+								},
+								{
+									"key": "Policy",
+									"value": "{{X-Amz-Policy}}",
+									"type": "text"
+								},
+								{
+									"key": "X-Amz-Signature",
+									"value": "{{X-Amz-Signature}}",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"description": "file must match videoFormat type from step 1",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{s3BucketURL}}",
+							"host": [
+								"{{s3BucketURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post - upload finalize upload",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/assets/uploads/{{Amz-uploadId}}",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"assets",
+								"uploads",
+								"{{Amz-uploadId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "workspace content APIs",
+			"item": [
+				{
+					"name": "get workspace elements snapshot when time",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements?when=2022-01-13T00:00:00.000Z",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							],
+							"query": [
+								{
+									"key": "when",
+									"value": "2022-01-13T00:00:00.000Z",
+									"description": "Time moment for which workspace state will be retrieved"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all elements in workspace",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get the Element by elementID",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "id of the element from a workspace"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get elements in workspace  by element type",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements?type=Shape",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Shape",
+									"description": " \"Text\",\n                            \"LegacyNote\",\n                            \"Image\",\n                            \"Document\",\n                            \"Grid\",\n                            \"Browser\",\n                            \"Video\",\n                            \"Stroke\",\n                            \"Shape\",\n                            \"Line\",\"LinkedDocument\",\"Canvas\",\n                            \"Selection\",\n                            \"Window\",\n                            \"Whiteboard\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete element in workspace",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "element ID to delete"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Image PNG from URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*",
+									"Note: alpha channel is always on",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\":\"Image\",\n    \"imageFormat\": \"jpg\",\n    \"pinned\":false,\n    \"sourceUrl\":\"https://live.staticflickr.com/4007/5075169756_d51008b274.jpg\",\n    \"title\": \"postmanImageUPload.png\",\n    \"width\":473,\n    \"height\":500,\n    \"transform\": { \"x\": 0, \"y\": 0, \"scale\": 1 }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Regular Shape",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Shape\",\n    \"text\": \"this is a rectangle\",\n    \"transform\": {\n        \"x\": 1000,\n        \"y\": 1000\n    },\n    \"style\": {\n        \"regularShape\":{\n            \"fillColor\":{\n                \"r\": 0,\n                \"g\": 0,\n                \"b\": 255,\n                \"a\": 1     \n            },\n            \"strokeColor\": {\n            \"r\": 255,\n            \"g\": 255,\n            \"b\": 255,\n            \"a\": 1\n            },\n            \"kind\":\"rectangle\",\n            \"width\": 600,\n            \"height\": 600,\n            \"strokeWidth\": 10\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Sticky Shape",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Shape\",\n    \"text\": \"this is a sticky rectangle notecard\",\n    \"textStyle\":{\n        \"fontSize\":\"auto\",\n        \"verticalAlign\":\"top\"\n    },\n    \"transform\": {\n        \"x\": 1000,\n        \"y\": 1000\n    },\n    \"style\": {\n        \"stickyShape\":{\n            \"fillColor\": {\n                \"r\": 254,\n                \"g\": 232,\n                \"b\": 108,\n                \"a\": 1\n            },\n            \"kind\":\"sticky-rectangle\",\n            \"width\": 1600\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create shape Card in Canvas",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Shape\",\n    \"text\": \"this is a rectangle\",\n    \"style\": {\n        \"regularShape\":{\n            \"fillColor\":{\n                \"r\": 0,\n                \"g\": 0,\n                \"b\": 255,\n                \"a\": 1     \n            },\n            \"strokeColor\": {\n            \"r\": 255,\n            \"g\": 255,\n            \"b\": 255,\n            \"a\": 0\n            },\n            \"kind\":\"rectangle\",\n            \"width\": 600,\n            \"height\": 600,\n            \"strokeWidth\": 10\n        }\n    },\n    \"transform\":{\n        \"x\":0,\n        \"y\":0\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements?relativeToOriginOf=",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							],
+							"query": [
+								{
+									"key": "relativeToOriginOf",
+									"value": "",
+									"description": "canvas elementID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create stroke",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Stroke\",\n    \"transform\":{\n        \"x\":0,\n        \"y\":0\n    },\n    \"style\":{\n        \"color\":{\"r\":255,\"g\":255,\"b\":0,\"a\":1},\n        \"strokeWidth\": 50.0,\n        \"brushType\":\"Pen\"\n    },\n    \"points\": [ 2438,\n                846,\n                2404,\n                851,\n                2362,\n                860,\n                2218,\n                887,\n                2157,\n                901,\n                2060,\n                929,\n                2012,\n                961,\n                1924,\n                1040,\n                1879,\n                1110,\n                1833,\n                1248,\n                1826,\n                1309,\n                1824,\n                1413,\n                1826,\n                1455,\n                1847,\n                1566,\n                1861,\n                1627,\n                1873,\n                1692,\n                1885,\n                1803,\n                1885,\n                1846,\n                1867,\n                1893,\n                1854,\n                1915,\n                1805,\n                1958,\n                1777,\n                1970,\n                1688,\n                1988,\n                1627,\n                1988,\n                1507,\n                1962,\n                1443,\n                1921,\n                1306,\n                1732,\n                1295,\n                1644,\n                1324,\n                1494,\n                1357,\n                1428,\n                1440,\n                1309,\n                1472,\n                1281,\n                1534,\n                1245,\n                1570,\n                1241,\n                1703,\n                1262,\n                1752,\n                1286,\n                1855,\n                1355,\n                1922,\n                1406,\n                2106,\n                1537,\n                2219,\n                1617,\n                2369,\n                1704,\n                2407,\n                1726,\n                2461,\n                1751,\n                2481,\n                1752,\n                2492,\n                1748,\n                2573,\n                1671,\n                2616,\n                1626]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create Document from URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*",
+									"Note: alpha channel is always on",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"documentFormat\": \"pdf\",\n    \"pinned\":false,\n    \"sourceUrl\":\"https://create.bluescape.com/hubfs/One_Pagers_2020/Collaboration_Solutions_and_Bluescape.pdf\",\n    \"title\": \"testPDF.pdf\",\n    \"width\":989,\n    \"height\":1280,\n    \"transform\": { \"x\": 0, \"y\": 0, \"scale\": 1 },\n    \"type\":\"Document\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Text",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*",
+									"Note: alpha channel is always on",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n    \"type\": \"Text\",\n    \"pinned\":false,\n    \"text\": \"new text from API\",\n    \"style\":{\n        \"backgroundColor\": { \"r\": 223, \"g\": 156, \"b\": 200, \"a\": 1},\n        \"color\": { \"r\": 23, \"g\": 56, \"b\": 100, \"a\": 1},\n        \"fontFamily\": \"Helvetica\",\n        \"fontSize\":30\n    },\n    \"transform\": {\n        \"x\": 0,\n        \"y\": 0,\n        \"scaleX\": 1,\n        \"scaleY\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Text with blocks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*",
+									"Note: alpha channel is always on",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n    \"type\": \"Text\",\n    \"pinned\":false,\n    \"style\":{\n        \"backgroundColor\": { \"r\": 223, \"g\": 156, \"b\": 200, \"a\": 1},\n        \"color\": { \"r\": 23, \"g\": 56, \"b\": 100, \"a\": 1},\n        \"fontFamily\": \"Helvetica\",\n        \"fontSize\":30,\n        \"width\":600\n    },\n    \"blocks\":[\n        {\n            \"block\":{\n                \"align\":\"left\",\n                \"content\":[\n                    {\n                        \"span\":{\n                            \"text\":\"Rich text with bullets and bold span\",\n                            \"fontSize\": 30,\n                            \"fontFamily\": \"Helvetica\",\n                            \"fontWeight\": \"normal\",\n                            \"fontStyle\": \"italic\"\n                        }\n                    }\n                ]\n            }\n        },\n        {\n            \"list\":{\n                \"kind\":\"bullet\",\n                \"items\":[\n                    {\n                        \"indent\":0,\n                        \"content\":[{\n                            \"text\":\"item 1\"\n                        }]\n                    },\n                    {\n                        \"indent\":0,\n                        \"content\":[{\n                            \"text\":\"item 2\"\n                        }]\n                    }\n                ]\n            }\n        },\n        {\n            \"block\":{\n                \"align\":\"left\",\n                \"content\":[\n                    {\n                        \"text\":\"test \"\n                    },\n                    {\n                        \"span\":{\n                            \"fontWeight\":\"bold\",\n                            \"text\":\"BOLD\"\n                        }\n                    },\n                    {\n                        \"text\":\" text\"\n                    }\n                ]\n            }\n        }\n    ],\n    \"transform\": {\n        \"x\": 0,\n        \"y\": 0,\n        \"scaleX\": 1,\n        \"scaleY\": 1\n    }\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Browser",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pinned\":false,\n    \"style\":{\"frameless\":false, \"height\":3840, \"width\":4320},\n    \"transform\":{\"scale\":1, \"x\":0, \"y\":0},\n    \"type\": \"Browser\",\n    \"url\": \"https://www.google.com/\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create Video from URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*",
+									"Note: alpha channel is always on",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\":\"Video\",\n    \"videoFormat\": \"mp4\",\n    \"pinned\":false,\n    \"sourceUrl\":\"https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_1MB.mp4\",\n    \"title\": \"testVideo.mp4\",\n    \"width\": 1920,\n    \"height\": 1080,\n    \"transform\": { \"x\": 0, \"y\": 0, \"scale\": 1 }\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Canvas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*",
+									"Note: alpha channel is always on",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n    \"type\": \"Canvas\",\n    \"name\":\"created from REST\",\n    \"pinned\":false,\n    \"style\":{\n        \"borderColor\": { \"r\": 238, \"g\": 85, \"b\": 80, \"a\": 1},\n        \"height\":2000,\n        \"width\":2000\n    },\n    \"transform\": {\n        \"x\": 0,\n        \"y\": 0\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Grid",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Grid\",\n    \"transform\": {\n        \"x\": 0,\n        \"y\": 0\n    },\n    \"rowCount\": 2,\n    \"columnCount\": 2,\n    \"cells\": [\n        {\n            \"elementId\":\"<imageElementID>\",\n            \"row\":1,\n            \"column\":1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Line",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Line\",\n    \"start\": {\n        \"absolute\":{ \"x\": -323, \"y\": 509}\n    },\n    \"end\": {\n        \"absolute\":{ \"x\": 485, \"y\": 589}\n    },\n    \"controlPoints\": [],\n    \"routing\": \"direct\",\n    \"style\": {\n        \"strokeColor\":{ \"r\": 255, \"g\": 255, \"b\": 255, \"a\": 1 },\n    \"strokeStyle\": \"solid\",\n    \"strokeWidth\": 12,\n    \"startCap\": \"none\",\n    \"endCap\": \"arrow-fill\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update shape element in workspace  - regularShape",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Shape\",\n    \"text\": \"Patch Text\",\n    \"transform\":{\n        \"x\":500\n    },\n    \"style\": {\n            \"regularShape\":{\n                \"width\": 1000,\n                \"height\": 1000,\n                \"strokeWidth\": 10,\n                \"strokeColor\": {\n                    \"r\": 255,\n                    \"g\": 0,\n                    \"b\": 0,\n                    \"a\": 1\n                },\n                \"fillColor\": {\n                    \"r\": 0,\n                    \"g\": 255,\n                    \"b\": 0,\n                    \"a\": 1\n                }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "shapeID to update"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update shape element in workspace  - stickyShape Copy",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Shape\",\n    \"text\": \"Patch stickyShape\",\n    \"transform\":{\n        \"x\":500\n    },\n    \"style\": {\n            \"stickyShape\":{\n                \"width\": 1000,\n                \"kind\":\"sticky-rectangle\",\n                \"fillColor\": {\n                        \"r\": 51,\n                        \"g\": 142,\n                        \"b\": 255,\n                        \"a\": 1\n                    }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "shape elementId to update"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update elements in workspace  - Line",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Line\",\n    \"start\": {\n        \"absolute\":{ \"x\": 323, \"y\": 509}\n    },\n    \"end\": {\n        \"absolute\":{ \"x\": 885, \"y\": 589}\n    },\n    \"style\": {\n        \"strokeColor\":{ \"r\": 0, \"g\": 255, \"b\": 255, \"a\": 1 },\n        \"strokeStyle\": \"solid\",\n        \"strokeWidth\": 50,\n        \"startCap\": \"none\",\n        \"endCap\": \"arrow-fill\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "lineID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update elements in workspace  - Text simple",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Text\",\n    \"text\": \"Patch Text\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "text elementId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change elements in workspace  - Text style",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n    \"type\": \"Text\",\n    \"text\": \"text from patch2\",\n    \"transform\": {\n        \"x\": 0,\n        \"y\": 0,\n        \"scaleX\": 1,\n        \"scaleY\": 1\n    },\n    \"pinned\": false,\n    \"style\": {\n        \"backgroundColor\":{\n            \"r\":255,\n            \"g\":255,\n            \"b\":255,\n            \"a\":1\n        },\n        \"color\":{\n            \"r\":255,\n            \"g\":0,\n            \"b\":0,\n            \"a\":1\n        },\n        \"fontFamily\":\"Dosis\",\n        \"fontSize\":60,\n        \"width\": 531,\n        \"height\": 251,\n        \"verticalAlign\":\"center\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "text elementId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change elements in workspace  - Browser",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\" : \"Browser\",\n    \"url\": \"https://www.google.com\",\n    \"transform\": {\n        \"x\": 1500,\n        \"y\": 1500,\n        \"scale\" : 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "browser elementId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change elements in workspace  - document",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Image\",\n    \"transform\": {\n        \"x\": 500,\n        \"y\": 500,\n        \"scale\" : 3\n    }\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": null,
+									"description": "document elementId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change elements in workspace  - canvas",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Canvas\",\n    \"name\":\"updated name from API\",\n    \"style\":{\n        \"borderColor\":{\n            \"r\":238,\n            \"g\":85,\n            \"b\":80,\n            \"a\":1\n        }\n    },\n    \"transform\": {\n        \"x\": 500,\n        \"y\": 500\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "canvas elementId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change elements in workspace  - grid",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Grid\",\n    \"transform\": {\n        \"x\": 0,\n        \"y\": 0\n    },\n    \"cells\": [\n        {\n            \"elementId\": \"<imageElementID>\",\n            \"row\": 0,\n            \"column\": 0\n        }\n    ]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "grid elementId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change elements in workspace  - video",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Video\",\n    \"transform\":{\n        \"x\":0,\n        \"y\":0,\n        \"scale\":2\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "",
+									"description": "video elementId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change elements in workspace  - Stroke",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"Stroke\",\n    \"pinned\" : false,\n    \"transform\":{\n        \"x\":0,\n        \"y\":0\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements/:elementId",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces",
+								"{{workspaceID}}",
+								"elements",
+								":elementId"
+							],
+							"variable": [
+								{
+									"key": "elementId",
+									"value": "61df516ab8767a6636719f0c",
+									"description": "stroke elementID"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ISAM/Management",
+			"item": [
+				{
+					"name": "get user workspaces",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/users/me/workspaces",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"users",
+								"me",
+								"workspaces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get users/me",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/users/me",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get users filter - need instance admin role",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/users?filterBy=firstName eq 'Kevin'",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"users"
+							],
+							"query": [
+								{
+									"key": "filterBy",
+									"value": "firstName eq 'Kevin'",
+									"description": "Supported fields: firstName,lastName,email,avatarUrl,lastLoggedInAt\nie: firstName eq 'Kevin'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get users/me/role",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/users/me/role",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"users",
+								"me",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all roles",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/roles",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user orgs: Instance Admin",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/users/:userID/organizations",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"users",
+								":userID",
+								"organizations"
+							],
+							"variable": [
+								{
+									"key": "userID",
+									"value": "<userId>",
+									"description": "the userID inspect.  Note: Must have Instance Admin bearer token"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user me orgs",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/users/:userID/organizations",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"users",
+								":userID",
+								"organizations"
+							],
+							"variable": [
+								{
+									"key": "userID",
+									"value": "me",
+									"description": "the userID inspect.  Note: Must have Instance Admin bearer token"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new workspace",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n    \"isPublic\": true,\n    \"name\":\"REST create workspace\",\n    \"description\":\"This is a workspace created from REST API\",\n    \"organizationId\": \"wOETxsWt3SAmuyUQbbLy\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/workspaces",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"workspaces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get org: get org details",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/organizations/:orgID",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"organizations",
+								":orgID"
+							],
+							"variable": [
+								{
+									"key": "orgID",
+									"value": "<yourOrgID>",
+									"description": "orgID, get user org from /users/me/organizations"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get members of an org",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/organizations/:orgID/members",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"organizations",
+								":orgID",
+								"members"
+							],
+							"variable": [
+								{
+									"key": "orgID",
+									"value": "",
+									"description": "orgID, get user org from /users/me/organizations"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get members of an org with filter",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_path}}/v3/organizations/:orgID/members?filterBy=user.firstName eq 'Kevin'",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"organizations",
+								":orgID",
+								"members"
+							],
+							"query": [
+								{
+									"key": "filterBy",
+									"value": "user.firstName eq 'Kevin'",
+									"description": "filters: user.id, user.email, user.firstName, user.lastName, user.avatarUrl, group.id, group.name, group.description, group.type, group.bluescapeGroupJoinType, role.id, role.name, role.description, role.type, role.resourceType, role.isCustom"
+								}
+							],
+							"variable": [
+								{
+									"key": "orgID",
+									"value": "<orgID>",
+									"description": "orgID: get user org from /users/me/organizations"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

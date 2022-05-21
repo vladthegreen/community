@@ -1,0 +1,5586 @@
+{
+	"info": {
+		"_postman_id": "1648e597-0275-4c72-b129-7cd15bf3ad45",
+		"name": "V3 graphQL Public",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "graphQL queries",
+			"item": [
+				{
+					"name": "query: all elements in a workspace",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#query and view specific elements with inline fragment:\nquery getAllElements($workspaceId: String!){\n    elements(workspaceId: $workspaceId ) {\n        type: __typename        \n        id pinned zIndex traits\n        transform {\n            x\n            y\n            scaleX\n            scaleY\n        }\n        comments{\n            actorId\n            actorType\n            commenterName\n            createdAt\n            id\n            parentId\n            text\n            traits\n            blocks{\n                content\n            }\n        }\n\n        ... on Image{\n            height\n            width\n            ingestionState\n            asset{\n                imageFormat\n                url\n            }\n        }\n\n        ... on Video{\n            width\n            height\n        }\n\n        ... on Shape{\n            kind\n            style{\n                height\n                width\n                fillColor{\n                    r\n                    g\n                    b\n                    a\n                }\n            }\n        }\n\n    ... on Text{\n        text\n        style{\n            textTransform\n            fontSize\n            fontFamily\n            verticalAlign\n            color{\n                r g b a\n            }\n            backgroundColor{\n                r g b a\n            }\n            width\n            height\n        }\n        \n        blocks{\n            align\n            ... on TextList{\n                align\n                kind\n                items{\n                    align\n                    indent\n                    content\n                }\n            }\n            \n            ... on TextBlock{\n                align\n                content\n            }\n        }\n    }\n\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						},
+						"description": "Can come from loading this URL: https://elementary.my.bluescape.io/graphql/workspace/j5FIqcSmCpkJjXnWb8qk"
+					},
+					"response": []
+				},
+				{
+					"name": "query: get elements by type",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#get elements from a workspace for a given type\n#types are defined in graphQL schema, current types are: \n#Text, LegacyNote, Image, Document, Grid, Browser, Video, Stroke\n#Shape, Line, LinkedDocument, Canvas, Selection, Window, Whiteboard\nquery getElements($workspaceId: String!){\n        elements(workspaceId: $workspaceId, type:[Shape, Image], flatten:false) {\n            type:__typename\n            id\n            transform{\n                x\n                y\n                scaleX\n                scaleY\n            }\n            comments{\n                actorId\n                actorType\n                commenterName\n                createdAt\n                id\n                parentId\n                text\n                traits\n                blocks{\n                    content\n                }\n            }\n\n            ... on Stroke{\n                style{\n                    strokeWidth\n                    brushType\n                }\n                points\n            }\n\n            ... on Shape {\n                traits\n                text\n                textStyle{\n                    fontSize\n                    verticalAlign\n                    fontFamily\n                }\n                style{\n                    width\n                    height\n                }\n            }\n            ... on Browser {\n                style{\n                    width\n                    height\n                }\n            }\n            ... on Image{\n                width\n                height\n                ingestionState\n                asset{\n                    imageFormat\n                    url\n                }\n\n            }\n\n            ... on Video{\n                width\n                height\n                filename\n                sourceUrl\n            }\n            ... on LegacyNote{\n                width\n                height\n            }\n            ... on Document{\n                width\n                height\n            }       \n\n            ... on Grid{\n                rowCount\n                columnCount\n                style{\n                    horizontalCellMargin\n                    verticalCellMargin\n                    cellWidth\n                    cellHeight\n                }\n            }\n\n            ... on Canvas {\n                style{\n                    width\n                    height\n                }\n            }\n\n            ... on Text {\n                style{\n                    width\n                    height\n                }\n            }\n\n            ... on Selection{\n                id\n                selected{\n                    id\n                    selectedType: __typename\n                }\n            }\n\n            ... on Line{\n                style{\n                    strokeWidth\n                }\n                \n                start{\n                    ... on AbsoluteLinePoint{\n                        x\n                        y\n                    }\n                }\n\n                end{\n                    ... on AbsoluteLinePoint{\n                        x\n                        y\n                    }\n                }\n            }\n        }\n    }",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: shape with fragment",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getShapeQuery($workspaceId: String!){\n    elements(workspaceId: $workspaceId, type:[Shape] ) {\n        type: __typename        \n        id pinned zIndex traits\n        transform { \n            x \n            y \n            scaleX \n            scaleY \n        }\n\n        #In the query below, note the use of the \"...myShape\" fragment\n        #The fragment is defined after this query\n        ... on Shape{ ...myShape}\n    }\n}\n\n#use fragments to help make queries more modular and to create reausable objects:\nfragment myShape on Shape{\n            kind\n            text\n            aspectRatioFixed\n            style{\n                __typename\n                width\n                height\n                fillColor{ r g b a}\n                ... on StickyShapeStyle{\n                    width\n                    height\n                    fillColor{\n                        ...allColor\n                    }\n                }\n                ... on RegularShapeStyle{\n                    width\n                    height\n                    strokeWidth\n                    strokeColor{\n                        #Note how this fragment uses the \"...allColor\" fragment (defined at the bottom of this request)\n                        ...allColor\n                    }\n                    fillColor{\n                        ...allColor\n                    }\n                }\n            }\n        }\n\nfragment allColor on Color { r g b a }",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						},
+						"description": "Can come from loading this URL: https://elementary.my.bluescape.io/graphql/workspace/j5FIqcSmCpkJjXnWb8qk"
+					},
+					"response": []
+				},
+				{
+					"name": "query: get elements in a canvas with fragments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query CanvasElements($workspaceUid: String!, $canvasId: String!) {\n    elements: elements(workspaceId: $workspaceUid, canvasId: $canvasId) {\n        __typename\n        id\n        ... on Element { transform { ...allTransform } }\n        ... on Text { zIndex pinned text style { width height color { ...allColor} \n        backgroundColor { ...allColor } } } \n        ... on Image { zIndex width height } \n        ... on Stroke { zIndex points style { strokeWidth color { ...allColor } brushType } }\n        ... on Document { width height title asset { documentFormat } }\n        ... on LinkedDocument { style { width height } }\n        ... on Shape { kind shapeText:text zIndex style {  width height fillColor{ ...allColor } } }  \n        ... on Browser {style { width height } } \n        ... on Window {style { width height } }\n        ... on Video {filename width height }\n        ... on Whiteboard {style { width height } }\n        ... on Grid {transform { ...allTransform } rowCount columnCount style { cellWidth cellHeight } }\n        ... on Line { style { strokeWidth strokeColor { ...allColor } } start { ... on AbsoluteLinePoint { x y } } end { ... on AbsoluteLinePoint { x y } } } } }\n\n    fragment allTransform on Transform { x y scaleX scaleY }\n    fragment allColor on Color { r g b a }",
+								"variables": "{\n    \"workspaceUid\": \"{{workspaceID}}\",\n    \"canvasId\":\"<yourCanvasID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: elements Image attachments",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#query Images and attached elements:\nquery queryImageAttachments($workspaceId: String!){\n    elements(workspaceId: $workspaceId, type:[Image]) {        \n        __typename\n        id\n        transform{\n            x y scaleX scaleY\n        }\n        traits\n\n        ... on Image{\n            width\n            height\n            asset{\n                url\n                imageFormat\n            }\n            attachments{\n                __typename\n                id\n                transform{\n                    x\n                    y\n                    scaleX\n                    scaleY\n                }\n                surface{\n                    id\n                }\n                ... on Text{\n                    style{\n                        width\n                        height\n                    }\n                }\n            }\n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get specific element by id",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#find an element by elementID:\nquery getElementById($workspaceId: String!, $elementId:String!){\n    elements(workspaceId: $workspaceId, id:$elementId) {        \n        __typename\n        id\n        traits\n        pinned\n        transform{\n            scaleX\n            scaleY\n            x\n            y\n        }\n\n        ... on Image{\n            width\n            height\n        }\n\n        ... on Canvas{\n            name\n            style{\n                 height\n                 width\n                 borderColor{\n                     r\n                     g\n                     b\n                     a\n                 }\n            }\n        }\n        ... on Text{\n            text\n        }\n        ... on Shape{\n            shapeText:text\n            style{\n                height\n                width\n            }\n        }\n\n        ... on Document{\n            width\n            height\n            title\n            filename\n            sourceUrl\n            preview{\n                imageFormat\n                url\n            }\n\n            ingestionState\n\n            asset{\n                documentFormat\n                url\n            }\n\n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\",\n    \"elementId\": \"<yourElementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: elements filter when",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#get elements from a workspace snapshot at a given time:\nquery($workspaceId: String!){\n    #when is ISO date format and will return a snapshot of the workspace at the given time:\n    #ie: new Date().toISOString()\n    elements(workspaceId: $workspaceId, when:\"2021-08-13T01:18:19.692Z\") {        \n        __typename\n        id\n        traits\n        ... on Text{\n            text\n        }\n        ... on Shape{\n            shapeText:text\n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get canvases in workspace",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#qet canvases in a workspace:\nquery($workspaceId: String!){\n    elements(workspaceId: $workspaceId, type:[Canvas]) {        \n        __typename\n        id\n        traits\n\n        ... on Canvas{\n            name\n            style{\n                width\n                height\n                borderColor{ r g b a}\n            }\n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get elements by canvasID",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#relativeToOriginOf optional param will return elements with relative \n#positioning to the element in relativeToOriginOf\nquery getCanvasElements($workspaceId: String!, $canvasID:String!, $relativeToOriginOf:String){\n        elements(workspaceId: $workspaceId, canvasId:$canvasID, relativeToOriginOf:$relativeToOriginOf, type:[Stroke, Grid, Image, Shape, LegacyNote, Canvas, Line, Text, Document, Video, Browser], flatten:false) {\n            type:__typename\n            id\n            transform{\n                x\n                y\n                scaleX\n                scaleY\n            }\n            comments{\n                actorId\n                actorType\n                commenterName\n                createdAt\n                id\n                parentId\n                text\n                traits\n                blocks{\n                    content\n                }\n            }\n\n            \n            ... on Image{\n                width\n                height\n                ingestionState\n                asset{\n                    imageFormat\n                    url\n                }\n                attachments{\n                    __typename\n                    id\n                }\n            }\n\n        }\n    }",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\",\n    \"canvasID\":\"<yourCanvasID>\",\n    \"relativeToOriginOf\":\"<yourCanvasID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: elements in a viewport",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#get elements from a workspace for a given overlap:viewport of (x,y, width, height)\nquery ($workspaceId: String!){\n    elements(workspaceId: $workspaceId, overlaps:{x:0 y:0, width:500, height:500}) {        \n        __typename\n        id\n        traits\n        transform{\n            x\n            y\n            scaleX\n            scaleY\n        }\n\n        ... on Text{\n            style{\n                width\n                height\n            }\n        }\n\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get canvas elements",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#get all canvas elements in a workspace storing ID in canvasID:\nquery($workspaceId: String!){\n    elements(workspaceId: $workspaceId, type:[Canvas]) {        \n        elementType:__typename\n        canvasID:id\n        traits\n        pinned\n        transform{\n            x\n            y\n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get notecard from canvas",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#get Shapes from a specific canvasID - notecard is a shape with text:\nquery($workspaceId: String!, $canvasID: String){\n    elements(workspaceId: $workspaceId, canvasId:$canvasID, type:[Shape]) {        \n        __typename\n        id\n        traits\n\n        transform {\n            x\n            y\n            scaleX\n            scaleY\n        }\n\n        #use shape fragment:\n        ... on Shape{ ...myShape}\n    }\n}\n\n#use fragments to help make queries more modular:\nfragment myShape on Shape{\n            kind\n            text\n            aspectRatioFixed\n            style{\n                __typename\n                width\n                height\n                fillColor{ r g b a}\n                ... on StickyShapeStyle{\n                    width\n                    height\n                    fillColor{\n                        ...allColor\n                    }\n                }\n                ... on RegularShapeStyle{\n                    width\n                    height\n                    strokeWidth\n                    strokeColor{\n                        ...allColor\n                    }\n                    fillColor{\n                        ...allColor\n                    }\n                }\n            }\n        }\n\nfragment allColor on Color { r g b a }\n\n",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\",\n    \"canvasID\":\"<yourCanvasID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get Grid cells",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#get smartGrid row/column count and contents in cells:\nquery($workspaceId: String!){\n    elements(workspaceId: $workspaceId, type:[Grid]) {        \n        __typename\n        id\n        traits\n        ... on Grid{\n            columnCount\n            rowCount\n            cells{\n                column\n                elementId\n                row\n            }\n            \n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: filter with traits",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#query to return elements with matching trait data:\nquery filterTraits($workspaceId: String!, $queryTraits:TraitInput!){\n    elements(workspaceId: $workspaceId, traits:$queryTraits) {        \n        __typename\n        id\n        traits\n\n        transform {\n            x\n            y\n            scaleX\n            scaleY\n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\",\n    \"queryTraits\":{\"context\":\"http://schema.org/\", \"content\":{\"testBox\":\"1\"} }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Image attachments",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#get images in a workspace and flatten the attachments:\nquery($workspaceId: String!){\n    elements(workspaceId: $workspaceId, type:[Image], flatten:false) {        \n        \n        __typename\n        id\n        transform {\n            x\n            y\n            scaleX\n            scaleY\n        }\n        ... on Image{\n        \twidth\n            height\n            asset{\n                imageFormat url\n            }\n            attachments{\n                id\n                type:__typename\n                surface{\n                    type:__typename\n                    id\n                }\n                ... on Shape{\n                    \n                    style{\n                        height\n                        width\n                    }\n                }\n\n                ... on Stroke{\n                    style{\n                        strokeWidth\n                        brushType\n                    }\n                    transform{\n                        x y \n                        scaleX scaleY\n                    }\n                    #points\n                }\n\n                ... on Text{\n                    type:__typename\n                    id\n                    text\n                }\n\n            }\n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get line",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query($workspaceId: String!){\n    elements(workspaceId: $workspaceId, type:[Line]) {        \n        __typename\n        id\n        ... on Line{\n            zIndex\n            transform{\n                x\n                y\n                scaleX\n                scaleY\n            }\n            pinned\n            traits\n            surface{\n              id\n            }\n\n            start{\n                __typename\n                ... on AbsoluteLinePoint{\n                    x\n                    y\n                }\n                ... on AnchorLinePoint{\n                    id u v\n                }\n            }\n\n          \tend{\n                __typename\n                ... on AbsoluteLinePoint{\n                    x\n                    y\n                }\n                ... on AnchorLinePoint{\n                    id u v\n                }\n            }\n\n            controlPoints{\n                __typename\n            }\n\n            routing\n\n            style{\n                strokeWidth\n                endCap\n                startCap\n                strokeColor{\n                    r g b a\n                }\n                strokeStyle\n            }\n        }\n\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}\n\n"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get Image/Shape width/height",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#query workspace to find Images and Shapes and return element specific properties:\nquery ($workspaceId: String!) {\n  elements(workspaceId: $workspaceId, type:[Image, Shape]) {\n    type: __typename\n    id\n    traits\n    transform{\n        x\n        y\n        scaleX\n        scaleY\n    }\n    \n    #get specific image properties as defined by schema:\n    ... on Image {\n        width\n        height\n\n        asset{\n            imageFormat\n            url\n        }\n    }\n    \n    ... on Shape {\n        style{\n            width\n            height\n        }\n    }\n  }\n}",
+								"variables": "{\n    \"workspaceId\": \"MbAeChOwSXBK15QF4AGC\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get strokes",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getStrokes($workspaceId: String! $elementId:String){\n    elements(workspaceId:$workspaceId, id:$elementId, type:[Stroke]) {\n        __typename\n        id\n        transform {\n            x\n            y\n            scaleX\n            scaleY\n        }\n        \n        ... on Stroke{\n\n            style{\n                color{\n                    r\n                    g\n                    b\n                    a\n                }\n                strokeWidth\n                brushType\n            }\n            points\n        }\n    }\n}",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query: get all Text elements from workspace",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query($workspaceId: String!) {\n  TextFields: elements(workspaceId: $workspaceId) {\n      id\n      __typename\n   ... on Text { id traits style { width height } \n     }\n  }\n}\n",
+								"variables": "{\"workspaceId\": \"{{workspaceID}}\"}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "collection of queries to get elements and associated information from a workspace"
+		},
+		{
+			"name": "graphQL mutations",
+			"item": [
+				{
+					"name": "image Upload from Disk",
+					"item": [
+						{
+							"name": "1. mutation: createImage from disk",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"console.log(\"jsonData = \", jsonData)",
+											"console.log(\"X-Amz-Algorithm = \" + jsonData.data.createImage.content.fields['X-Amz-Algorithm'])",
+											"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.createImage.content.uploadId);",
+											"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.createImage.content.url);",
+											"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.createImage.content.fields.key);",
+											"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.createImage.content.fields.bucket);",
+											"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.createImage.content.fields[\"X-Amz-Algorithm\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.createImage.content.fields[\"X-Amz-Credential\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.createImage.content.fields[\"X-Amz-Date\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.createImage.content.fields.Policy);",
+											"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.createImage.content.fields[\"X-Amz-Signature\"]);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "tokenName",
+											"value": "production",
+											"type": "string"
+										},
+										{
+											"key": "challengeAlgorithm",
+											"value": "S256",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{login}}",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "clientSecret",
+											"value": "{{clientSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "{{clientID}}",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "{{API_path}}/authorize",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "{{authTokenURL}}",
+											"type": "string"
+										},
+										{
+											"key": "accessToken",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "#create Image from disk\n#imageFormat: jpeg, jpg, gif, png, tiff, tif, image/jpeg, image/gif, image/png, image/tiff\nmutation createImageFromDisk($ws: String! $x:Float! $y:Float! $title:String! $imageFormat:ImageFormatInput! $filename:String! $scale:Float) {\n    createImage(\n          workspaceId: $ws\n          input: {\n            title:$title\n            imageFormat: $imageFormat\n            filename:$filename\n            transform: {\n              x: $x\n              y: $y\n              scale:$scale\n            }\n    }) \n    #return values after creation:    \n    {\n        content{ uploadId url fields}\n        preview{uploadId url fields}\n        image{id width height ingestionState}\n    }\n}",
+										"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"title\":\"testimage.jpeg\",\n    \"filename\":\"testimage.jpeg\",\n    \"imageFormat\":\"jpeg\",\n    \"previewFormat\":\"jpeg\",\n    \"x\":0,\n    \"y\":0,\n    \"scale\":1\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_path}}/v3/graphql",
+									"host": [
+										"{{API_path}}"
+									],
+									"path": [
+										"v3",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2. Post - upload to s3 bucket",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(pm.environment.get(\"Amz-Bucket\"))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "key",
+											"value": "{{Amz-Key}}",
+											"type": "text"
+										},
+										{
+											"key": "bucket",
+											"value": "{{Amz-Bucket}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Algorithm",
+											"value": "{{X-Amz-Algorithm}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Credential",
+											"value": "{{X-Amz-Credential}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Date",
+											"value": "{{X-Amz-Date}}",
+											"type": "text"
+										},
+										{
+											"key": "Policy",
+											"value": "{{X-Amz-Policy}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Signature",
+											"value": "{{X-Amz-Signature}}",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"description": "file must match file type from step 1",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{s3BucketURL}}",
+									"host": [
+										"{{s3BucketURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3. mutation: processAsset",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "tokenName",
+											"value": "production",
+											"type": "string"
+										},
+										{
+											"key": "challengeAlgorithm",
+											"value": "S256",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{login}}",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "clientSecret",
+											"value": "{{clientSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "{{clientID}}",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "{{API_path}}/authorize",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "{{authTokenURL}}",
+											"type": "string"
+										},
+										{
+											"key": "accessToken",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "#complete the asset upload using the uploadID obtained from \n#createImage, createVideo, createDocument\nmutation myProcessAsset($ws: String! $uploadID: String!) {\n    processAsset( workspaceId:$ws id:$uploadID input:{\n        #pass any errors to indicate upload failure to user in a workspace\n        #errorCode:\"500\"\n        #errorMessage:\"internal server error TEST!\"\n    })\n}",
+										"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"uploadID\" : \"{{Amz-uploadId}}\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_path}}/v3/graphql",
+									"host": [
+										"{{API_path}}"
+									],
+									"path": [
+										"v3",
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "mutation: Delete object by ID",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation deleteElementByID($ws: String! $idToDelete: String!) {\n     delete(workspaceId: $ws id: $idToDelete )\n   }\n",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"idToDelete\" : \"<elementToDelete>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateTraits simple",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update element JSON-LD traits metadata\nmutation ($workspace: String!, $id:String!) {\n  traits: updateTraits(workspaceId: $workspace, dryRun:false, id: $id, input: {context: \"http://schema.org/\", content: {name: \"hello world\"}})\n}",
+								"variables": "{\n    \"workspace\": \"{{workspaceID}}\",\n    \"id\" : \"<yourElementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createComment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation myCreateComment($ws: String!, $elementId:ID!, $comment:String!) {\n        createComment(\n            workspaceId: $ws\n            id:$elementId\n            input: {\n                blocks:{\n                    content:{\n                        text:$comment\n                    }\n                }\n                \n            }\n        )\n        {\n            #what is returned:\n            id\n            parentId\n            createdAt\n            actorId\n            actorType\n            text\n            traits\n            blocks{\n                content\n            }\n\n        }\n      }",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"elementId\":\"<yourElementID>\",\n    \"comment\":\"this is a comment from graphQL\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createCanvas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"// var jsonData = JSON.parse(responseBody);",
+									"// console.log(\"jsonData = \", jsonData.data.createCanvas.id)",
+									"// postman.setEnvironmentVariable(\"elementID\", jsonData.data.createCanvas.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation myCreateCanvas($ws: String! $canvasName: String! $x: Float! $y: Float!, $width:Float!, $height:Float!) {\n        createCanvas(\n            workspaceId: $ws\n            input: {\n                name: $canvasName\n                transform: {\n                    x:$x \n                    y:$y\n                }\n                style:{\n                    width:$width\n                    height:$height\n                    #Valid borderColor are as follows:\n                    #blue \"r\": 153, \"g\": 198, \"b\": 255, \"a\": 1\n                    #green \"r\": 130, \"g\": 222, \"b\": 198, \"a\": 1\n                    #yellow \"r\": 254, \"g\": 240, \"b\": 159, \"a\": 1\n                    #red \"r\": 255, \"g\": 161, \"b\": 161, \"a\": 1\n                    #pink \"r\": 255, \"g\": 158, \"b\": 230, \"a\": 1\n                    #purple \"r\": 221, \"g\": 173, \"b\": 255, \"a\": 1\n                    borderColor:{\n                        r:153\n                        g:198\n                        b:255\n                        a:1\n                    }\n                }\n            }\n        )\n        {\n            #return from Canvas:\n            id\n            zIndex\n            name\n            transform {x y scaleX scaleY}\n            pinned\n            style{width height}\n        }\n      }",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"canvasName\" : \"Canvas from graphQL\",\n    \"width\":2000,\n    \"height\":1000,\n    \"x\": 0,\n    \"y\": 0\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateCanvas",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update shape properties\nmutation myUpdateCanvas($ws: String! $x: Float! $y: Float! $width:Float! $height:Float! $canvasId: String!, $name:String!) {\n    updateCanvas( workspaceId:$ws id:$canvasId input:{\n        name:$name\n        transform:{x:$x y:$y}\n        style:{\n            width:$width\n            height:$height\n            #Valid borderColor are as follows:\n            #blue \"r\": 153, \"g\": 198, \"b\": 255, \"a\": 1\n            #green \"r\": 130, \"g\": 222, \"b\": 198, \"a\": 1\n            #yellow \"r\": 254, \"g\": 240, \"b\": 159, \"a\": 1\n            #red \"r\": 255, \"g\": 161, \"b\": 161, \"a\": 1\n            #pink \"r\": 255, \"g\": 158, \"b\": 230, \"a\": 1\n            #purple \"r\": 221, \"g\": 173, \"b\": 255, \"a\": 1\n            borderColor:{\n                r:255\n                g:161\n                b:161\n                a:1\n            }\n        }\n    })\n    #returning id is mandatory: UpdateElementOutput!\n    {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"x\": 0,\n    \"y\": 0,\n    \"width\":1000,\n    \"height\":1000,\n    \"canvasId\" : \"<canvas_elementID>\",\n    \"name\":\"new Canvas Name from graphQL\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createStroke",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation myCreateStroke($ws: String! $strokeProps:CreateStrokeInput!) {\n      stroke1:createStroke(\n          workspaceId: $ws\n          input: $strokeProps)\n        #return values:\n        {id zIndex transform{ x y scaleY scaleX} style{ strokeWidth}}\n    }",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"strokeProps\":{\n        \"pinned\":false,\n        \"transform\":{\"x\":0, \"y\":0, \"scale\":1},\n        \"style\":{\n            \"color\":{\"r\":255,\"g\":255,\"b\":0,\"a\":1},\n            \"strokeWidth\": 50,\n            \"brushType\":\"Pen\"\n        },\n         \"points\": [\n                    2438,\n                    846,\n                    2404,\n                    851,\n                    2362,\n                    860,\n                    2218,\n                    887,\n                    2157,\n                    901,\n                    2060,\n                    929,\n                    2012,\n                    961,\n                    1924,\n                    1040,\n                    1879,\n                    1110,\n                    1833,\n                    1248,\n                    1826,\n                    1309,\n                    1824,\n                    1413,\n                    1826,\n                    1455,\n                    1847,\n                    1566,\n                    1861,\n                    1627,\n                    1873,\n                    1692,\n                    1885,\n                    1803,\n                    1885,\n                    1846,\n                    1867,\n                    1893,\n                    1854,\n                    1915,\n                    1805,\n                    1958,\n                    1777,\n                    1970,\n                    1688,\n                    1988,\n                    1627,\n                    1988,\n                    1507,\n                    1962,\n                    1443,\n                    1921,\n                    1306,\n                    1732,\n                    1295,\n                    1644,\n                    1324,\n                    1494,\n                    1357,\n                    1428,\n                    1440,\n                    1309,\n                    1472,\n                    1281,\n                    1534,\n                    1245,\n                    1570,\n                    1241,\n                    1703,\n                    1262,\n                    1752,\n                    1286,\n                    1855,\n                    1355,\n                    1922,\n                    1406,\n                    2106,\n                    1537,\n                    2219,\n                    1617,\n                    2369,\n                    1704,\n                    2407,\n                    1726,\n                    2461,\n                    1751,\n                    2481,\n                    1752,\n                    2492,\n                    1748,\n                    2573,\n                    1671,\n                    2616,\n                    1626\n                ]\n    }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateStroke",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update existing stroke element, changing scale to 5:\nmutation myUpdateStroke($ws: String! $elementId:String! $x:Float! $y:Float! $scale:Float) {\n      stroke1:updateStroke(\n          workspaceId: $ws\n          id:$elementId\n          input: {transform:{ x:$x y:$y scale:$scale}})\n        #returning id is mandatory: UpdateElementOutput!\n        {id}\n    }",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"elementId\":\"<yourStrokeElementID>\",\n    \"x\":0,\n    \"y\":0,\n    \"scale\":5\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createText with style and bgColor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData.data.createText.id)",
+									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.createText.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation myCreateTextWithBG($ws: String! $textContent: String! $x: Float! $y: Float!, $width:Float!, $height:Float!) {\n        createText(\n            workspaceId: $ws\n            input: {\n                text: $textContent\n                transform: {\n                    x:$x \n                    y:$y\n                }\n                style:{\n                    width:$width\n                    height:$height\n                    fontSize:55\n                    fontFamily:\"Helvetica\"\n                    textTransform:none\n                    verticalAlign:top\n                    color:{\n                        r:255\n                        g:255\n                        b:255\n                        a:1\n                    }\n                    backgroundColor:{\n                        a:1\n                        b:255\n                        g:0\n                        r:0\n                    }\n                }\n            }\n        )\n        {\n            id\n            text\n            transform {x y}\n        }\n      }",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"textContent\" : \"New text from graphQL\",\n    \"x\": 0,\n    \"y\": 0,\n    \"width\": 600,\n    \"height\":150\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createText addRichTextExample",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData.data.createText.id)",
+									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.createText.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation addRichTextExample($workspaceId: String!, $input: CreateTextInput!) {\n        createText(workspaceId: $workspaceId, input: $input) {\n            id\n            transform {x y scaleX scaleY}\n            pinned\n            zIndex\n            text\n            style { textTransform fontSize fontFamily verticalAlign color {r g b a }}\n            blocks {\n                ...on TextBlock {\n                align content}}\n                }\n    }",
+								"variables": "{\n    \"workspaceId\": \"{{workspaceID}}\",\n    \"input\": {\n        \"blocks\": {\n            \"block\": {\n            \"align\": \"left\",\n            \"content\": {\n                \"span\": {\n                    \"text\": \"Rich Text Example!\",\n                    \"fontSize\": 30,\n                    \"fontFamily\": \"Helvetica\",\n                    \"fontWeight\": \"normal\",\n                    \"fontStyle\": \"italic\",\n                    \"textDecoration\": \"underline\",\n                    \"color\": { \"r\": 23, \"g\": 56, \"b\": 100, \"a\": 1},\n                    \"backgroundColor\": { \"r\": 223, \"g\": 156, \"b\": 200, \"a\": 1}\n                        }\n                    }\n                }\n            } \n        }\n    }"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createText with blocks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData.data.createText.id)",
+									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.createText.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation myCreateTextWithBlocks($ws: String! $x: Float! $y: Float!, $width:Float!, $height:Float!) {\n        createText(workspaceId: $ws, \n            input: {\n                transform: {\n                    x:$x \n                    y:$y\n                }\n                style:{\n                    width:$width\n                    height:$height\n                    fontSize:65\n                    fontFamily:\"Helvetica\"\n                    textTransform:none\n                    verticalAlign:top\n                    color:{\n                        r:255\n                        g:255\n                        b:255\n                        a:1\n                    }\n                    backgroundColor:{\n                        a:1\n                        b:255\n                        g:0\n                        r:0\n                    }\n                }\n                blocks: [\n                    {\n                        block:{\n                            align: left\n                            content: [\n                                {\n                                    text: \"text block example, line one\"\n                                }\n                            ]\n                        }\n                    },\n                    {\n                        block:{\n                            align: left\n                            content: [\n                                {\n                                    text: \"\"\n                                }\n                            ]\n                        }\n                    },\n                    {\n                        list:{\n                            kind:bullet\n                            items: [\n                            {\n                                indent: 0,\n                                content: [\n                                    {\n                                        text: \"bullet list 1\"\n                                    }\n                                ]\n                            },\n                            {\n                                indent: 1,\n                                content: [\n                                    {\n                                        text: \"bullet list 2\"\n                                    }\n                                ]\n                            }\n                        ]\n                        }\n                    },\n                    {\n                        block:{\n                            align: left\n                            content: [\n                                {\n                                    text: \"\"\n                                }\n                            ]\n                        }\n                    },\n                    {\n                        block:{\n                            content:[\n                                {\n                                    text:\"new \"\n                                },\n                                {\n                                    span:{\n                                        fontWeight:bold\n                                        content:[\n                                            {\n                                                text:\"BOLD\"\n                                            }\n                                        ]\n                                    }\n                                },\n                                {\n                                    text:\" text\"\n                                }\n                            ]\n                        }\n                    }       \n                ]\n            }\n        )\n        {\n            id\n            transform {x y scaleX scaleY}\n            pinned\n            zIndex\n            text\n            style { textTransform fontSize fontFamily verticalAlign color {r g b a }}\n            blocks {\n                ...on TextBlock {\n                    align content\n                }\n            }\n        }\n      }",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"x\": 0,\n    \"y\": 0,\n    \"width\": 900,\n    \"height\":600\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateText x,y and width/height",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update existing Text x,y width,height and text:\nmutation updateTextCoords($ws: String! $textContent: String! $x: Float! $y: Float! $textID:String!) {\n    updateText(\n        workspaceId: $ws\n            id:$textID\n            input: {\n                text: $textContent\n                transform: {x:$x y:$y scaleX:1 scaleY:1}\n            }\n    )\n    #returning id is mandatory: UpdateElementOutput!\n    {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"textContent\" : \"Updated text from graphQL\",\n    \"x\": 0,\n    \"y\": 0,\n    \"textID\" : \"<text_elementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateText position",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update existing Text x,y and text:\nmutation($ws: String! $x: Float! $y: Float! $textID:String!) {\n        updateText(\n          workspaceId: $ws\n          id:$textID         \n          input: {\n            transform: {x:$x y:$y}\n        })\n        #returning id is mandatory: UpdateElementOutput!\n        {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"x\": 110,\n    \"y\": 0,\n    \"textID\" : \"<text_elementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateText attachTextToElement",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation attachTextToElement($workspaceId: String! $surfaceToAttachTo: String! $textElementId: String!) {\n  updateText(workspaceId: $workspaceId , id: $textElementId, \n    input: {\n        #use surface: workspaceID to detach and element from surface\n        surface: $surfaceToAttachTo\n        #x and y are relative to surface element\n        transform:{\n            x:100\n            y:100\n        }\n    })\n  {\n    id\n  }\n}",
+								"variables": "{\n  \"workspaceId\": \"{{workspaceID}}\",\n  \"surfaceToAttachTo\":\"<elementToAttachTextTo>\", \n  \"textElementId\": \"<yourTextElementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createGrid with Image",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#create a smartGrid and place an image in the grid:\nmutation($ws: String! $x:Float! $y:Float! $cellImageID:String!, $rowCount:Int!, $colCount:Int!, $imgRow:Int!, $imgCol:Int!) {\n    createGrid(\n        workspaceId: $ws\n            input: {\n                cells:{\n                    elementId:$cellImageID\n                    row:$imgRow\n                    column:$imgCol\n            }\n            rowCount:$rowCount\n            columnCount:$colCount\n            style:{\n                cellHeight:500\n                cellWidth:500\n                horizontalCellMargin:5\n                verticalCellMargin:5\n            }\n\n            transform: {x:$x y:$y}})\n\n    {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"cellImageID\" : \"<image_elementID>\",\n    \"imgRow\": 2,\n    \"imgCol\":2,\n    \"x\": 0,\n    \"y\": 0,\n    \"rowCount\":3,\n    \"colCount\":3\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateGrid with Image",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update a smartGrid and place an image in the grid:\n#note: updating grid cells will overwrite all grid cells with new images\nmutation myUpdateGrid($ws: String! $x:Float! $y:Float!, $gridID:String!, $cellImageID:String!, $imgRow:Int!, $imgCol:Int!, $rowCount:Int!, $colCount:Int!) {\n    updateGrid(\n        workspaceId: $ws\n        id:$gridID\n        input: {\n            cells:{\n                elementId:$cellImageID\n                row:$imgRow\n                column:$imgCol\n            }\n            #update the grid size and grid style:\n            rowCount:$rowCount\n            columnCount:$colCount\n            style:{\n                cellHeight:500\n                cellWidth:500\n                horizontalCellMargin:5\n                verticalCellMargin:5\n            }\n\n            transform: {x:$x y:$y}\n        })\n    {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"gridID\":\"<grid_elementID>\",\n    \"cellImageID\" : \"<image_elementID_toAdd_to_grid>\",\n    \"imgRow\": 1,\n    \"imgCol\":0,\n    \"x\": 0,\n    \"y\": 0,\n    \"rowCount\":4,\n    \"colCount\":4\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createVideo with URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#create Video from url with video preview:\nmutation myCreateVideoFromURL($ws: String!, $x:Float!, $y:Float!, $width:Float!, $height:Float!, $title:String!, $videoFormat:VideoFormatInput!, $url:String!) {\n    createVideo(\n          workspaceId: $ws\n          input: {\n            #Original filename of the uploaded asset, without a path.\n            #filename: $filename\n            title:$title\n            videoFormat: $videoFormat\n            #previewFormat: $previewFormat\n            sourceUrl: $url\n            width: $width\n            height: $height\n            transform: {\n              x: $x\n              y: $y\n            }\n    }) \n    #return CreateVideoResponse values after creation:    \n    {\n        content{ uploadId url fields}\n        video{ title filename ingestionState  width height id asset{ videoFormat url} preview{imageFormat url}}\n        preview{uploadId url fields} \n    }\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"title\":\"testVideo.mp4\",\n    \"videoFormat\":\"mp4\",\n    \"previewFormat\":\"jpeg\",\n    \"url\":\"https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_1MB.mp4\",\n    \"x\":0,\n    \"y\":0,\n    \"width\": 1920,\n    \"height\": 1080,\n    \"scale\":1\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateVideo",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update a video x,y and scale. \n#Note: if no x,y are sent video defaults to x,y (0,0)\nmutation myUpdateVideo($ws: String! $x: Float! $y: Float! $scale:Float! $videoID: String!) {\n    updateVideo( workspaceId:$ws id:$videoID input:{\n        transform:{\n            x:$x \n            y:$y \n            scale:$scale\n        } \n    })\n    #returning id is mandatory: UpdateElementOutput!\n    {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"x\": 0,\n    \"y\": 0,\n    \"scale\":2,\n    \"videoID\" : \"<video_elementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createBrowser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//var jsonData = JSON.parse(responseBody);",
+									"//console.log(\"jsonData = \", jsonData.data.createBrowser.id)",
+									"//postman.setEnvironmentVariable(\"elementID\", jsonData.data.createBrowser.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#create Browser \nmutation myCreateBrowser($ws: String! $url:String! $x:Float! $y:Float! $scale:Float!) {\n    createBrowser(workspaceId: $ws input: {\n        url: $url\n        pinned:false\n        style:{\n            frameless:true\n            #width must be at least 640:\n            #width:1000\n            #height must be at least 240\n            #height:1000\n        }\n        transform:{\n            x:$x\n            y:$y\n            scale:$scale\n        }\n    }) \n    #return Browser values after creation:    \n    {\n        id \n        url\n        transform {x y scaleX scaleY}\n        style{ width height frameless}\n    }\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"url\":\"https://www.bluescape.com\",\n    \"x\":0,\n    \"y\":0,\n    \"scale\":1\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateBrowser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData.data)",
+									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.updateBrowser);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update an existing browser element:\nmutation($ws: String! $browserID:String! $url:String! $x:Float! $y:Float! $scale:Float! $width:Float! $height:Float!) {\n    updateBrowser(workspaceId: $ws id:$browserID input: {\n        url: $url\n        pinned:false\n        style:{\n            #width must be at least 640:\n            width:$width\n            #height must be at least 240\n            height:$height\n        }\n        transform:{\n            x:$x\n            y:$y\n            scale:$scale\n        }\n    })\n    #returning id is mandatory: UpdateElementOutput!\n    {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"url\":\"https://www.bluescape.com\",\n    \"x\":0,\n    \"y\":0,\n    \"width\":800,\n    \"height\":600,\n    \"scale\":1,\n    \"browserID\":\"<broswer_elementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createImage from URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#create Image from URL\nmutation createImageFromUrl($ws: String! $title:String! $imageFormat:ImageFormatInput! $url:String! $width:Float!, $height:Float!, $x:Float!, $y:Float!) {\n    createImage(\n          workspaceId: $ws\n          input: {\n            pinned:false\n            title:$title\n            imageFormat: $imageFormat\n            sourceUrl: $url\n            width:$width\n            height:$height\n            transform: {\n              x: $x\n              y: $y\n              scale:2\n            }\n    }) \n    #return CreateImageResponse values after creation:    \n    {\n        image{id pinned width height ingestionState}\n    }\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"title\":\"tree.jpg\",\n    \"imageFormat\":\"jpg\",\n    \"previewFormat\":\"jpg\",\n    \"url\":\"https://live.staticflickr.com/4007/5075169756_d51008b274.jpg\",\n    \"width\":473,\n    \"height\":500,\n    \"x\":0,\n    \"y\":0\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateImage",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update an image x,y and scale. \n#Note: if no x,y are sent image defaults to x,y (0,0)\nmutation myUpdateImage($ws: String! $x: Float! $y: Float! $scale:Float! $imageID: String!) {\n    updateImage( workspaceId:$ws id:$imageID input:{\n        pinned:true\n        transform:{\n            x:$x \n            y:$y \n            scale:$scale\n        }\n    })\n    #returning id is mandatory: UpdateElementOutput!\n    {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"x\": 0,\n    \"y\": 0,\n    \"scale\":2,\n    \"imageID\" : \"<image_elementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createDocument URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#create Document from URL\nmutation createDocumentFromUrl($ws: String!, $x:Float!, $y:Float!, $width:Float!, $height:Float!, $title:String!, $documentFormat:DocumentFormatInput!, $url:String! $scale:Float) {\n    createDocument(\n          workspaceId: $ws\n          input: {\n            title:$title\n            pinned:false\n            documentFormat: $documentFormat\n            sourceUrl: $url\n            width:$width\n            height:$height\n            transform: {\n              x: $x\n              y: $y\n              scale:$scale\n            }\n    }) \n    #return values after creation:    \n    {\n        content{ uploadId url fields}\n        preview{uploadId url fields}\n        document{id width height ingestionState}\n    }\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"title\":\"testPDF.pdf\",\n    \"documentFormat\":\"pdf\",\n    \"previewFormat\":\"png\",\n    \"url\":\"https://create.bluescape.com/hubfs/One_Pagers_2020/Collaboration_Solutions_and_Bluescape.pdf\",\n    \"x\":0,\n    \"y\":0,\n    \"width\":989,\n    \"height\":1280,\n    \"scale\":1\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateDocument",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update an image x,y and scale. \n#Note: if no x,y are sent image defaults to x,y (0,0)\nmutation myUpdateDocument($ws: String! $x: Float! $y: Float! $scale:Float! $documentID: String!) {\n    updateDocument( workspaceId:$ws id:$documentID input:{\n        transform:{\n            x:$x \n            y:$y \n            scale:$scale\n        }\n    })\n    #returning id is mandatory: UpdateElementOutput!\n    {id}\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"x\": 0,\n    \"y\": 0,\n    \"scale\":2,\n    \"documentID\" : \"<document_elementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: create regularShape",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// console.log(\"jsonData = \", jsonData.data.shape1.id)",
+									"// postman.setEnvironmentVariable(\"elementID\", jsonData.data.shape1.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#create shape with json-ld traits data\nmutation myCreateShape($ws: String! $x:Float! $y:Float!, $width:Float!, $height:Float!, $g:Int, $strokeWidth:Float!, $fontSize:FontSize!, $shapeText:String, ) {\n      shape1:createShape(\n          workspaceId: $ws\n          input: {\n            pinned:false\n\n            #store JSON-LD metadata that can be accessed with query on the element:\n            traits:{context: \"http://schema.org/\", content: {testBox: \"1\"}}\n            \n            mirrorX: false\n            mirrorY: false\n            text:$shapeText\n            style:{\n                regularShape:{\n                    kind: Rectangle\n                    width:$width height:$height strokeWidth:$strokeWidth\n                    fillColor: {r:255 g:161 b:161 a:1}\n                    strokeColor:{r:255 g:$g b:0 a:1} \n                }\n            }\n            textStyle:{\n                #fontSize = \"auto\" or size int\n                fontSize:$fontSize\n                #verticalAlign = top, center, bottom\n                verticalAlign:center\n            }\n          transform: {x:$x y:$y}})\n    #return values from Shape type:\n    {id pinned kind mirrorX mirrorY traits transform{x y scaleX scaleY} style{ height width fillColor{r g b a}} }\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"x\":   0,\n    \"y\": 0,\n    \"width\": 800,\n    \"height\": 300,\n    \"g\":0,\n    \"strokeWidth\":5,\n    \"fontSize\":\"auto\",\n    \"shapeText\":\"text on shape from graphQL\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: create stickyShape",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// console.log(\"jsonData = \", jsonData.data.shape1.id)",
+									"// postman.setEnvironmentVariable(\"elementID\", jsonData.data.shape1.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#create shape with json-ld traits data\nmutation myCreateShape($ws: String!, $x:Float!, $y:Float!, $width:Float!, $textContent:String!) {\n      shape1:createShape(\n          workspaceId: $ws\n          input: {\n            text:$textContent\n            traits:{context: \"http://schema.org/\", content: {testBox: \"1\"}}\n            mirrorX: false\n            mirrorY: false\n            style:{\n                stickyShape:{\n                    width:$width\n                    kind:StickySquare\n                    fillColor:{ \n                        r:255\n                        g:255\n                        b:255\n                        a:1\n                    }\n                }\n            } \n          transform: {x:$x y:$y}})\n    #return values:\n    {id pinned kind mirrorX mirrorY traits transform{x y scaleX scaleY} style{ height width fillColor{r g b a}} }\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"textContent\" : \"graphQL stickyShape\",\n    \"x\": 0,\n    \"y\": 0,\n    \"width\":1800\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createShape batch",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData.data.shape1.id)",
+									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.shape1.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#This request will creates 2 shapes\nmutation myCreateShape($ws: String!, $x:Float!, $x2:Float!, $y2:Float!, $y:Float!, $width:Float!, $height:Float!, $textContent:String!) {\n      shape1:createShape(\n          workspaceId: $ws\n          input: {\n            text:$textContent\n            \n            mirrorY: false \n            style: {\n                regularShape: {\n                    kind: Rectangle        \n                    width:$width height:$height\n                    fillColor: {r:255 g:34 b:255 a:1}\n                    strokeColor:{r:0 g:0 b:255 a:1}\n                }\n            }\n          transform: {x:$x y:$y}})\n\n        #return Shape values:\n        {id kind mirrorY traits style{ ... on RegularShapeStyle{ width height}  }}\n\n        shape2:createShape(\n          workspaceId: $ws\n          input: {\n            text:$textContent\n            \n            mirrorY: false \n            style: {\n                regularShape: {\n                    kind: Rectangle        \n                    width:$width height:$height\n                    fillColor: {r:0 g:34 b:255 a:1}\n                    strokeColor:{r:0 g:0 b:255 a:1}\n                }\n            }\n          transform: {x:$x2 y:$y2}})\n\n        #return Shape values:\n        {id kind mirrorY traits style{ ... on RegularShapeStyle{ width height}  }}  \n    }\n    ",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"textContent\" : \"graphQL shape\",\n    \"x\": 0,\n    \"y\": 0,\n    \"x2\":820,\n    \"y2\":0,\n    \"width\": 800,\n    \"height\": 300\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createShape with traits",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData.data.shape1.id)",
+									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.shape1.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#create shape with json-ld traits data\nmutation myCreateShapeWithTraits($ws: String! $x:Float! $y:Float!, $width:Float!, $height:Float!, $textContent:String!) {\n     shape1:createShape(\n         workspaceId: $ws\n         input: {\n           text:$textContent\n           traits:{context: \"http://schema.org/\", content: {name: \"hello world\", test:\"test value\"}}\n \n           style: {\n               regularShape:{\n                   kind: Diamond\n                   width:$width height:$height strokeWidth: 5\n                   fillColor: {r:51 g:142 b:255 a:1}\n                   strokeColor:{r:0 g:255 b:0 a:1}\n               }\n           }\n         transform: {x:$x y:$y}})\n \n       #return Shape values:\n       {id kind mirrorY traits }\n   }",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"textContent\" : \"graphQL shape Diamond with traits\",\n    \"x\": 620,\n    \"y\": 58,\n    \"width\": 800,\n    \"height\": 300\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateShape",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#update shape properties\nmutation myUpdateShape($ws: String! $x: Float! $y: Float! $textContent:String! $width:Float! $height:Float! $shapeID: String!) {\n   updateShape( workspaceId:$ws id:$shapeID input:{\n       text:$textContent\n       transform:{x:$x y:$y}\n       style:{\n           regularShape:{\n               width:$width\n               height:$height\n               fillColor:{\n                   r:255\n                   g:255\n                   b:255\n                   a:1\n               }\n               \n               strokeColor:{\n                   r:255\n                   g:255\n                   b:0\n                   a:1\n               }\n           }\n       }\n   })\n   #returning id is mandatory: UpdateElementOutput!\n   {id}\n}\n",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"textContent\" : \"update Shape from gQL\",\n    \"x\": 0,\n    \"y\": 0,\n    \"width\":500,\n    \"height\":500,\n    \"shapeID\" : \"<shape_elementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createLine",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(\"jsonData = \", jsonData.data.createLine.id)",
+									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.createLine.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation myCreateLine($ws: String!) {\n        createLine(\n            workspaceId: $ws\n            input:{\n                start:{\n                    absolute:{x:0 y:0}\n                }\n                end:{\n                    absolute:{x:300 y:300}\n                }\n                style:{\n                    #ArrowFill, ArrowStroke, Circle\n                    startCap:Circle\n                    endCap:ArrowStroke\n                    strokeColor:{r:255 g:0 b:0 a:1}\n                    #Solid, Dot, DashShort, DashLong\n                    strokeStyle: Solid\n                    strokeWidth: 15\n                }\n            }\n        )\n        {\n            #what is returned:\n            id\n            transform {x y}\n        }\n}",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: createLine CreateLineInput",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"// var jsonData = JSON.parse(responseBody);",
+									"// console.log(\"jsonData = \", jsonData.data.createLine.id)",
+									"// postman.setEnvironmentVariable(\"elementID\", jsonData.data.createLine.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "#use CreateLineInput object as input argument:\nmutation myCreateLine($workspaceId:String!, $verticalLineProps:CreateLineInput!) {\n        createLine(workspaceId: $workspaceId input: $verticalLineProps){\n            #what is returned:\n            id\n            transform {x y}\n        }\n}",
+								"variables": "{\n   \"workspaceId\":\"{{workspaceID}}\",\n   \"verticalLineProps\": {\n       \"pinned\": true,\n       \"start\": { \"absolute\": { \"x\": 100, \"y\": 100 } },\n       \"end\": { \"absolute\": { \"x\": 800, \"y\": 10 } },\n       \"style\": {\n           \"startCap\":\"Circle\",\n            \"endCap\":\"ArrowStroke\",\n            \"strokeColor\": { \"r\": 255, \"g\": 0, \"b\": 255, \"a\": 1 },\n            \"strokeStyle\": \"Solid\",\n            \"strokeWidth\": 5\n       }\n   }\n}\n"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mutation: updateLine",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation myCreateLine($ws: String!, $lineID:String!) {\n       updateLine(\n           workspaceId: $ws\n           id:$lineID\n           input:{\n               start:{\n                   absolute:{x:0 y:0}\n               }\n               end:{\n                   absolute:{x:600 y:30}\n               }\n               style:{\n                   #ArrowFill, ArrowStroke, Circle\n                   startCap:Circle\n                   endCap:ArrowStroke\n                   strokeColor:{r:0 g:255 b:255 a:1}\n                   #Solid, Dot, DashShort, DashLong\n                   strokeStyle: Solid\n               }\n           }\n       )\n       {\n           #what is returned:\n           id\n       }\n     }\n",
+								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"lineID\":\"<line_elementID>\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ISAM - workspace admin",
+			"item": [
+				{
+					"name": "ISAM - getMyOrgs",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getMyOrgs{\n   me {\n      organizations{\n          totalItems\n          results{\n              id\n              name\n          }\n      }\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ISAM - getMyOrgs and members in that org",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getMyOrgs{\n   me {\n      organizations{\n          totalItems\n          results{\n              id\n              name\n              members{\n                  totalItems\n                  results{\n                      member{\n                          __typename\n                          ... on User{\n                              firstName\n                              lastName\n                              id\n                          }\n                      }\n                  }\n              }\n          }\n      }\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ISAM - getMyWorkspaces",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query getMyWorkspaces{\n    me{\n        workspaces{\n            totalItems\n            results{\n                id\n                name\n                description\n                isPublic\n                owner{ email firstName lastName}\n            }\n        }\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ISAM - createWorkspace",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "production",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{clientSecret}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientID}}",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{API_path}}/authorize",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{authTokenURL}}",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation createMyWorkspace($wsName:String! $orgId:String! $isPublic:Boolean!){\n    createWorkspace( input:{\n        name:$wsName\n        organizationId:$orgId\n        isPublic:$isPublic\n    })\n    {id name organization{id} isPublic}\n}",
+								"variables": "{\n    \"wsName\":\"my new workspace name created from graphQL\",\n    \"description\":\"description of new workspace\",\n    \"orgId\":\"<yourOrgId>\",\n    \"isPublic\":true\n}"
+							}
+						},
+						"url": {
+							"raw": "{{API_path}}/v3/graphql",
+							"host": [
+								"{{API_path}}"
+							],
+							"path": [
+								"v3",
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
