@@ -1,4 +1,4 @@
-This folder contains a set of Postman Collections that exemplify the use of the Bluescape REST and GraphQL APIs
+This folder contains a set of Postman Collections that exemplify the use of the Bluescape REST and GraphQL APIs for the current v3 version of the APIs.
 
 # Contents of this folder
 File | Description| Comments
