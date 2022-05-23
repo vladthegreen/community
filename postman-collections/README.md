@@ -61,4 +61,7 @@ Steps:
 
 ![postmanBearerTokenCreation](https://user-images.githubusercontent.com/593911/169610445-cd7dfca8-a792-44ee-bb54-75d2c487bd6c.png)
 
+# Contact us
+
+Let us know your questions, comments and ideas in our [Bluescape Community site](https://community.bluescape.com/).
 
