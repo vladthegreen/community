@@ -11,6 +11,7 @@ We strongly recommend you to visit the [Bluescape Developer portal](https://deve
 
 - [Demo Apps](./demo-apps/): Demo apps that show you how to use the Bluescape APIs to help you solve practical business cases you may find when working with Bluescape. 
 - [Postman collections for REST and GraphQL APIs](./postman-collections/): Use this [Postman](https://www.postman.com/) collection to work with examples of how each individual REST and GraphQL API works.
+
 ## Contact us
 
-Let us know your comments and ideas in our [Bluescape Community site](https://community.bluescape.com/).
+Let us know your questions, comments and ideas in our [Bluescape Community site](https://community.bluescape.com/).
