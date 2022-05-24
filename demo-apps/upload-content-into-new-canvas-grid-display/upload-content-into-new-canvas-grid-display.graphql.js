@@ -71,7 +71,7 @@
 import fs from 'fs';
 import Yargs from "yargs";
 import { filterAndPreProcessAssets } from '../bluescape-modules/uploadUtils.js';
-import layoutAssetsInGrid from '../bluescape-modules/layoutImagesInGrid.js';
+import layoutAssetsInGrid from '../bluescape-modules/layoutAssetsInGrid.js';
 
 const now = new Date();
 
