@@ -8,6 +8,28 @@ v3 graphQL Public.postman_collection.json|Collection with examples for GraphQL A
 production.bluescape.com.postman_environment.json|Environmental variables for the Bluescape Production environment|These variables will be used for the generation of Access Tokens and for storing results used in some examples of APIs.
 production_federated_gql_schema.graphql|GraphQL Schema|This schema will facilitate writing GraphQL queries, mutations and subscriptions
 
+# Interesting examples
+
+## Interesting examples - GraphQL
+
+Case|Type of API|Description|Request name
+---|---|---|---
+Upload an image from your local drive|GraphQL|Learn how to upload an image from your local drive in 3 steps|v3 graphQL Public > GraphQL mutations >  Image Upload from disk
+Upload a Video using URL|GraphQL|Lear how to upload a Video into the workspace using a URL pointing to the video you want to upload.|v3 graphQL Public > GraphQL mutations > mutation: createVideo with URL
+Batching GraphQL queries or mutations|GraphQL|Learn how to brach queries or mutation and then execute them in 1 call.|v3 graphQL Public > GraphQL mutations > mutation: createShape batch
+Get the list of your workspaces|GraphQL|List the workspaces you can access|v3 graphQL Public > ISAM - workspace admin > ISAM - getMyWorkspaces 
+
+
+## Interesting examples - REST
+
+Case|Type of API|Description|Request name
+---|---|---|---
+Upload an image from your local drive|REST|Learn how to upload an image from your local drive in 3 steps|v3 REST APIs > imageUpload from local >  Image Upload from disk
+Upload a Video using URL|REST|Lear how to upload a Video into the workspace using a URL pointing to the video you want to upload.|v3 REST APIs > workspace content APIs > create Video from URL
+Get the list of your workspaces|REST|List the workspaces you can access|v3 REST APIs > ISAM/Management > get user workspaces 
+
+
+
 # Instructions
 
 ## How to import the Collections into Postman
