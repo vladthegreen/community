@@ -183,7 +183,7 @@ export default async function layoutAssetsInGrid(bluescapeApiParams, parameterVa
 
         getAssetsDimensionsPromisesArray.push(getAssetDimensions(getAssetDimensionsParams));
 
-        // Update the count of coumns and rows
+        // Update the count of columns and rows
         columnCount++;
         if (columnCount >= gridColumnsAndRows.columns) {
             columnCount = 0;
