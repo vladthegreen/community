@@ -27,12 +27,12 @@ import uploadAssetFromLocalIntoCanvasGraphql from './uploadAssetFromLocal.js'
 /**
     * Calculates the position of the asset within each "cell" in the grid
     *   The number of columns and rows is calculated based on the number of elements to upload. 
-    *   Current implementation: centered horizontally and vertically (default, or change value of 'verticalCellAlignmnet')
+    *   Current implementation: centered horizontally and vertically (default, or change value of 'verticalCellAlignment')
     * @param {Object} functionParams - Object with the data to execute this function:
     * @param {Object} functionParams.assetData - Data of the asset to upload
     * @param {number} functionParams.gridColumnWidth - Width of all columns
-    * @param {number} functionParamsgrid.RowHeight - Height of all rows
-    * @param {('top'|'center'|'bottom')} functionParams.verticalCellAlignmnet - Vertical alignment of the asset in the cell. Values: 'top', 'center', 'bottom'. Default is 'center'.
+    * @param {number} functionParams.gridRowHeight - Height of all rows
+    * @param {('top'|'center'|'bottom')} functionParams.verticalCellAlignment - Vertical alignment of the asset in the cell. Values: 'top', 'center', 'bottom'. Default is 'center'.
     *  
     * @returns {Object} Object with the new relative position of the asset in the canvas (from canvas position) and data from object.
     * @returns {Object} object.assetRelativePosition - Position of the asset, relative to the position of the canvas 
@@ -55,9 +55,9 @@ export async function calculateAssetPositionInGrid(functionParams) {
 
     // Vertical alignment
     var assetRelativeY = 0;
-    if (functionParams?.verticalCellAlignmnet === 'top') {
+    if (functionParams?.verticalCellAlignment === 'top') {
         assetRelativeY = 0;
-    } else if (functionParams?.verticalCellAlignmnet === 'bottom') {
+    } else if (functionParams?.verticalCellAlignment === 'bottom') {
         assetRelativeY = gridRowHeight - assetData.assetDimensions.height;
     } else {
         // Default: center
@@ -118,9 +118,9 @@ function getColumnsAndRows(numberOfElements) {
     * @param {Object} parameterValues.spacingBetweenAssets - Object with values for default spacing between assets, and from the Canvas border when they are uploaded into the canvas in a grid like display
     * @param {number} parameterValues.spacingBetweenAssets.VERTICAL_SPACING - Vertical spacing between assets and from assets to the top and bottom borders of the canvas
     * @param {number} parameterValues.spacingBetweenAssets.HORIZONTAL_SPACING - Horizontal spacing between assets and from the left and right borders of the canvas
-    * @param {('top'|'center'|'bottom')} parameterValues.verticalCellAlignmnet - Vertical alignment in cells: default: 'center'. Values: 'top', 'center', 'bottom'
+    * @param {('top'|'center'|'bottom')} parameterValues.verticalCellAlignment - Vertical alignment in cells: default: 'center'. Values: 'top', 'center', 'bottom'
     * 
-    * @returns {Object} Object with the data for the asset attemped to be uploaded and the result of the upload process
+    * @returns {Object} Object with the data for the asset attempted to be uploaded and the result of the upload process
     * @returns {Object} object.newAsset - Object containing data for the asset that was attempet to be uploaded
     * @returns {('video'|'image'|'document')} object.newAsset.[assetType] - Type of the newly created asset: 'video', 'image' or 'document'.It is an object that contains the id of the created element in the workspace 
     * @returns {string} object.newAsset.[assetType].id - Id of the newly created element
@@ -209,7 +209,7 @@ export default async function layoutAssetsInGrid(bluescapeApiParams, parameterVa
                 VERTICAL_SPACING,
                 HORIZONTAL_SPACING
             },
-            'verticalCellAlignmnet': parameterValues?.verticalCellAlignmnet ?? 'center'
+            'verticalCellAlignment': parameterValues?.verticalCellAlignment ?? 'center'
         }
         calculatePositionPromiseArray.push(calculateAssetPositionInGrid(paramsForGridPositionCalculation));
     });

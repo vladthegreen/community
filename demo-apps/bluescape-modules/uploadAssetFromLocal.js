@@ -27,13 +27,13 @@ import axios from 'axios';
 
 /**
     * STEP 2 of upload from local: upload the asset into the storage system (S3)
-    * @param functionParams - object containing the data for executing Bluescape APIs:
-    * @param functionParams.uploadData - object with the credentials to upload the asset into the storage system: 
-    * @param functionParams.uploadData.fields - object with signed URL fields for the upload to S3
-    * @param {string} functionParams.uploadData.url - url for the S3 upload
-    * @param {string} functionParams.assetFullPath - full path to the asset to upload
+    * @param {Object} functionParams - Object containing the data for executing Bluescape APIs:
+    * @param {Object} functionParams.uploadData - Object with the credentials to upload the asset into the storage system: 
+    * @param {Object} functionParams.uploadData.fields - Object with signed URL fields for the upload to S3
+    * @param {string} functionParams.uploadData.url - Url for the S3 upload
+    * @param {string} functionParams.assetFullPath - Full path to the asset to upload
     * 
-    * @returns {number} status code of the executed API call 
+    * @returns {Object} Object with the response body of the API call for the upload to the bucket 
 */
 
 async function uploadToBucket(functionParams) {
@@ -68,20 +68,20 @@ async function uploadToBucket(functionParams) {
 }
 
 /**
-    * STEP 3 of upload from local: links the uploaded asset to the zygote created in step 1. 
+    * STEP 3 of upload from local: links the uploaded asset to the zygote created in step 1 using GraphQL APIs. 
     * If an error happened in step 2, then add error to the mutation to make the zygote display error message and Cancel button
-    * @param bluescapeApiParams - Object containing the data for executing Bluescape APIs:
+    * @param {Object} bluescapeApiParams - Object containing the data for executing Bluescape APIs:
     * @param {string} bluescapeApiParams.token -  Access Token (oauth2 token, see https://api.apps.us.bluescape.com/docs/page/app-auth)
     * @param {string} bluescapeApiParams.apiPortalUrl - URL to the portal to execute the APIs, e.g. "https://api.apps.us.bluescape.com/api"
     * @param {string} bluescapeApiParams.apiVersion - Version of the APIs to be executed, e.g.: "v3". Current version: v3
     * 
-    * @param processData - object with the data to process in this function:
+    * @param {Object} processData - object with the data to process in this function:
     * @param {string} processData.workspaceId - Workspace Id of workspace where the asset will be uploaded
     * @param {string} processData.newElementId - ID of the new element that was created by the upload
-    * @param {number} processData.errorStatusCode - error status ID to report (can be empty)
-    * @param {string} processData.errorMessage - error message to report (can be empty)
+    * @param {number} processData.errorStatusCode - Error status ID to report (can be empty)
+    * @param {string} processData.errorMessage - Error message to report (can be empty)
     *  
-    * @returns true or triggers error message
+    * @returns {boolean} true or triggers error message
 */
 
 async function linkUploadedAssetToZygoteGraphql(bluescapeApiParams, processData) {
@@ -121,17 +121,17 @@ async function linkUploadedAssetToZygoteGraphql(bluescapeApiParams, processData)
 }
 
 /** 
-    * Uploads asset from local drive into a Canvas.
-    * STEP 1 of teh upload from local process.
-    * @param bluescapeApiParams - Object containing the data for executing Bluescape APIs:
+    * Uploads asset from local drive into a Canvas using GraphQL APIs.
+    * STEP 1 of the upload from local process.
+    * @param {Object} bluescapeApiParams - Object containing the data for executing Bluescape APIs:
     * @param {string} bluescapeApiParams.token -  Access Token (oauth2 token, see https://api.apps.us.bluescape.com/docs/page/app-auth)
     * @param {string} bluescapeApiParams.apiPortalUrl - URL to the portal to execute the APIs, e.g. "https://api.apps.us.bluescape.com/api"
     * @param {string} bluescapeApiParams.apiVersion - Version of the APIs to be executed, e.g.: "v3". Current version: v3
     *   
-    * @param assetToUploadData - object containing the data for the asset to upload from the local system
+    * @param {Object} assetToUploadData - object containing the data for the asset to upload from the local system
     * @param {string} assetToUploadData.workspaceId - Workspace Id of workspace where the asset will be uploaded
     * @param {string} assetToUploadData.assetFullPath - full path to the asset to upload     
-    * @param assetToUploadData.assetData - object with width and height of the asset to upload
+    * @param {Object} assetToUploadData.assetData - object with width and height of the asset to upload
     * @param {string} assetToUploadData.assetType - type of the asset to upload
     * @param {string} assetToUploadData.assetExtension - extension of the asset to upload
     * @param {string} assetToUploadData.assetTitle - title of the asset to upload 
@@ -139,11 +139,11 @@ async function linkUploadedAssetToZygoteGraphql(bluescapeApiParams, processData)
     * @param {number} assetToUploadData.x - x coordinate for position where the asset will be uploaded
     * @param {number} assetToUploadData.y - y coordinate for position where the asset will be uploaded
     * 
-    * @returns Object with the data for the asset attemped to be uploaded and the result of the upload process
-    * @returns object.newAsset - object containing data for the asset that was attempet to be uploaded
+    * @returns {Object} Object with the data for the asset attempted to be uploaded and the result of the upload process
+    * @returns {Object} object.newAsset - object containing data for the asset that was attempted to be uploaded
     * @returns {string} object.newAsset.[assetType] - Type of the newly created asset: 'video', 'image' or 'document'. It contains the id of the created element in the workspace 
     * @returns {string} object.newAsset.[assetType].id - Id of the newly created element
-    * @returns object.newAsset.uploadResult - oject with data for the result of the upload process
+    * @returns {Object} object.newAsset.uploadResult - object with data for the result of the upload process
     * @returns {string} object.newAsset.uploadResult.result - result of the upload process: 'success' or 'failure'
     * @returns {string} object.newAsset.uploadResult.assetPath - path or full URL of the asset
 */

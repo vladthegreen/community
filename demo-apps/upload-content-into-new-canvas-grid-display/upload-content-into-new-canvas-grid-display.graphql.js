@@ -64,7 +64,7 @@
  *    https://client.apps.us.bluescape.com/bbKg00aNOelot2SkYno0
  * 
  * You can specify the vertical alignment of the asset inside each cell: `top`, `center` or `bottom`. 
- *  Set this option in the `verticalCellAlignmnet` variable.
+ *  Set this option in the `verticalCellAlignment` variable.
  * 
 */
 
@@ -105,7 +105,7 @@ const bluescapeApiParams = {
 
 /** 
     * Creates report of the upload process, printed out in the console.
-    * @param {Object} uploadData - Object with the data for the asset attemped to be uplaoded and the result of the upload process
+    * @param {Object} uploadData - Object with the data for the asset attempted to be uploaded and the result of the upload process
     * @param {Object} uploadData.newAsset - Object containing data for the asset that was attempet to be uploaded
     * @param {('video'|'image'|'document')} uploadData.newAsset.[assetType] - Type of the newly created asset: 'video', 'image' or 'document'. 
     *  It contains the id of the created element in the workspace 
@@ -173,12 +173,12 @@ function validateMandatoryArgs() {
 
 /** 
  *  Main Function.
- *  Bluescape sample app: get a list of assets to uplaod (by URL or from local drive), 
+ *  Bluescape sample app: get a list of assets to upload (by URL or from local drive), 
  *  The App will calculate the area the assets will occupy and will check for empty space 
  *  in the workspace to create a Canvas to contain all these assets. You can specify a starting (x,y) point 
  *  for the Canvas to be located.
  *  The assets will be evenly spaced in a grid display. 
- *  - The columns width will be set according to the widest asset to uplaod, and the height of the rows will be determinded by the tallest asset to upload.
+ *  - The columns width will be set according to the widest asset to upload, and the height of the rows will be determinded by the tallest asset to upload.
  *       
  *  The upload can be from a local folder containing files to upload, or by a list of URLs pointing to assets to upload.
  *  Allowed extensions to upload into a workspace:
@@ -216,7 +216,7 @@ async function runAppExampleCreateCanvasAndUploadAsset() {
                 VERTICAL_SPACING,
                 HORIZONTAL_SPACING
             },
-            'verticalCellAlignmnet': 'center'
+            'verticalCellAlignment': 'center'
         }
 
         if (uploadMethod === "URL") {
@@ -227,7 +227,7 @@ async function runAppExampleCreateCanvasAndUploadAsset() {
             // Pre-filter the URLs, to process only the ones with valid extensions for uploading
             const preFilteredURLs = await filterAndPreProcessAssets(assetsToUploadByURL);
 
-            // Add the list of URLS for uplaod to the  layoutImagesInGridParams object
+            // Add the list of URLS for upload to the  layoutImagesInGridParams object
             layoutImagesInGridParams.assetsToUploadList = preFilteredURLs
 
             const uploadFromUrlProcessAnswer = await layoutAssetsInGrid(bluescapeApiParams, layoutImagesInGridParams);
@@ -253,7 +253,7 @@ async function runAppExampleCreateCanvasAndUploadAsset() {
                     // Pre-filter the files, to process only the ones with valid extensions for uploading
                     const preFilteredFiles = await filterAndPreProcessAssets(filesListFullPath);
 
-                    // Add the list of URLS for uplaod to the  layoutImagesInGridParams object
+                    // Add the list of URLS for upload to the  layoutImagesInGridParams object
                     layoutImagesInGridParams.assetsToUploadList = preFilteredFiles;
 
                     const uploadFromLocalProcess = await layoutAssetsInGrid(bluescapeApiParams, layoutImagesInGridParams);

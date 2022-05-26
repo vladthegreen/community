@@ -142,7 +142,6 @@ export async function checkUrlUploadIngestionStatusGraphql(bluescapeApiParams, f
     }
 
     return functionReturnValues;
-
 }
 
 /**
@@ -166,7 +165,7 @@ export async function checkUrlUploadIngestionStatusGraphql(bluescapeApiParams, f
     * @param {number} assetToUploadData.x - x coordinate for position where the asset will be uploaded
     * @param {number} assetToUploadData.y - y coordinate for position where the asset will be uploaded 
     * 
-    * @returns {Object} Object with the data for the asset attemped to be uploaded and the result of the upload process
+    * @returns {Object} Object with the data for the asset attempted to be uploaded and the result of the upload process
     * @returns {Object} object.newAsset - object containing data for the asset that was attempet to be uploaded
     * @returns {('video'|'image'|'document')} object.newAsset.[assetType] - Type of the newly created asset: 'video', 'image' or 'document'. It contains the id of the created element in the workspace 
     * @returns {string} object.newAsset.[assetType].id - Id of the newly created element
