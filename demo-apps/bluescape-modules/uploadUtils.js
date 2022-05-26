@@ -88,7 +88,7 @@ export async function getAssetDimensions(functionParams) {
 }
 
 /**
-    * Returns the values for the mutation to create the asset, and the modified set of parameters for that mutation
+    * Returns the values for the mutation to create the asset, and the modified set of parameters for that mutation using GraphQL APIs.
     * @param {Object} functionParams - Object containing the data for this function: 
     * @param {string} functionParams.assetType - Type of the asset to upload
     * @param {string} functionParams.assetExtension - Extension of the asset to upload

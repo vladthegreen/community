@@ -31,7 +31,7 @@ import uploadAssetFromLocalIntoCanvasGraphql from './uploadAssetFromLocal.js'
     * @param {Object} functionParams - Object with the data to execute this function:
     * @param {Object} functionParams.assetData - Data of the asset to upload
     * @param {number} functionParams.gridColumnWidth - Width of all columns
-    * @param {number} functionParamsgrid.RowHeight - Height of all rows
+    * @param {number} functionParams.gridRowHeight - Height of all rows
     * @param {('top'|'center'|'bottom')} functionParams.verticalCellAlignmnet - Vertical alignment of the asset in the cell. Values: 'top', 'center', 'bottom'. Default is 'center'.
     *  
     * @returns {Object} Object with the new relative position of the asset in the canvas (from canvas position) and data from object.

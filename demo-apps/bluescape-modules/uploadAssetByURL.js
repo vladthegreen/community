@@ -142,7 +142,6 @@ export async function checkUrlUploadIngestionStatusGraphql(bluescapeApiParams, f
     }
 
     return functionReturnValues;
-
 }
 
 /**
