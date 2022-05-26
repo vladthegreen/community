@@ -20,7 +20,7 @@ This demo app uses GraphQL APIs on each of the steps to obtain information about
     ----------------------
     ```
   - The current implementation uses a uniform width for columns and a uniform height for rows. The column width is calculated on the widest asset to upload, and the height of the rows is based on the tallest element to upload.
-  - You can specify the vertical alignment of the asset inside each cell: `top`, `center` or `bottom`. Set this option in the `verticalCellAlignmnet` variable.
+  - You can specify the vertical alignment of the asset inside each cell: `top`, `center` or `bottom`. Set this option in the `verticalCellAlignment` variable.
 
 ### What content can be uploaded?
 

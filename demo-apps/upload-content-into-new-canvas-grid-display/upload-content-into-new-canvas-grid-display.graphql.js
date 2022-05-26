@@ -64,7 +64,7 @@
  *    https://client.apps.us.bluescape.com/bbKg00aNOelot2SkYno0
  * 
  * You can specify the vertical alignment of the asset inside each cell: `top`, `center` or `bottom`. 
- *  Set this option in the `verticalCellAlignmnet` variable.
+ *  Set this option in the `verticalCellAlignment` variable.
  * 
 */
 
@@ -105,7 +105,7 @@ const bluescapeApiParams = {
 
 /** 
     * Creates report of the upload process, printed out in the console.
-    * @param {Object} uploadData - Object with the data for the asset attemped to be uploaded and the result of the upload process
+    * @param {Object} uploadData - Object with the data for the asset attempted to be uploaded and the result of the upload process
     * @param {Object} uploadData.newAsset - Object containing data for the asset that was attempet to be uploaded
     * @param {('video'|'image'|'document')} uploadData.newAsset.[assetType] - Type of the newly created asset: 'video', 'image' or 'document'. 
     *  It contains the id of the created element in the workspace 
@@ -216,7 +216,7 @@ async function runAppExampleCreateCanvasAndUploadAsset() {
                 VERTICAL_SPACING,
                 HORIZONTAL_SPACING
             },
-            'verticalCellAlignmnet': 'center'
+            'verticalCellAlignment': 'center'
         }
 
         if (uploadMethod === "URL") {

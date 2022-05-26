@@ -121,7 +121,7 @@ async function linkUploadedAssetToZygoteGraphql(bluescapeApiParams, processData)
 }
 
 /** 
-    * Uploads asset from local drive into a Canvas using GaphQL APIs.
+    * Uploads asset from local drive into a Canvas using GraphQL APIs.
     * STEP 1 of the upload from local process.
     * @param {Object} bluescapeApiParams - Object containing the data for executing Bluescape APIs:
     * @param {string} bluescapeApiParams.token -  Access Token (oauth2 token, see https://api.apps.us.bluescape.com/docs/page/app-auth)
@@ -139,8 +139,8 @@ async function linkUploadedAssetToZygoteGraphql(bluescapeApiParams, processData)
     * @param {number} assetToUploadData.x - x coordinate for position where the asset will be uploaded
     * @param {number} assetToUploadData.y - y coordinate for position where the asset will be uploaded
     * 
-    * @returns {Object} Object with the data for the asset attemped to be uploaded and the result of the upload process
-    * @returns {Object} object.newAsset - object containing data for the asset that was attempet to be uploaded
+    * @returns {Object} Object with the data for the asset attempted to be uploaded and the result of the upload process
+    * @returns {Object} object.newAsset - object containing data for the asset that was attempted to be uploaded
     * @returns {string} object.newAsset.[assetType] - Type of the newly created asset: 'video', 'image' or 'document'. It contains the id of the created element in the workspace 
     * @returns {string} object.newAsset.[assetType].id - Id of the newly created element
     * @returns {Object} object.newAsset.uploadResult - object with data for the result of the upload process
