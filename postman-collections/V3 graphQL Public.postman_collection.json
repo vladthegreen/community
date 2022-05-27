@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1648e597-0275-4c72-b129-7cd15bf3ad45",
+		"_postman_id": "44170db1-419f-448b-abf6-6728644fa987",
 		"name": "V3 graphQL Public",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8001164"
 	},
 	"item": [
 		{
@@ -1771,7 +1772,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query($workspaceId: String!) {\n  TextFields: elements(workspaceId: $workspaceId) {\n      id\n      __typename\n   ... on Text { id traits style { width height } \n     }\n  }\n}\n",
+								"query": "query($workspaceId: String!) {\n    TextFields: elements(workspaceId: $workspaceId, type:[Text]) {\n        id\n        __typename\n        ... on Text { \n            id text traits \n            style { \n                fontSize fontFamily verticalAlign\n                color{ r g b a}\n                width height\n            }\n            blocks{ align}\n        }\n    }\n}\n",
 								"variables": "{\"workspaceId\": \"{{workspaceID}}\"}"
 							}
 						},
@@ -1847,11 +1848,6 @@
 											"key": "useBrowser",
 											"value": true,
 											"type": "boolean"
-										},
-										{
-											"key": "password",
-											"value": "{{password}}",
-											"type": "string"
 										},
 										{
 											"key": "grant_type",
@@ -2024,11 +2020,6 @@
 											"key": "useBrowser",
 											"value": true,
 											"type": "boolean"
-										},
-										{
-											"key": "password",
-											"value": "{{password}}",
-											"type": "string"
 										},
 										{
 											"key": "grant_type",
@@ -2398,10 +2389,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"",
-									"// var jsonData = JSON.parse(responseBody);",
-									"// console.log(\"jsonData = \", jsonData.data.createCanvas.id)",
-									"// postman.setEnvironmentVariable(\"elementID\", jsonData.data.createCanvas.id);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -2481,7 +2469,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation myCreateCanvas($ws: String! $canvasName: String! $x: Float! $y: Float!, $width:Float!, $height:Float!) {\n        createCanvas(\n            workspaceId: $ws\n            input: {\n                name: $canvasName\n                transform: {\n                    x:$x \n                    y:$y\n                }\n                style:{\n                    width:$width\n                    height:$height\n                    #Valid borderColor are as follows:\n                    #blue \"r\": 153, \"g\": 198, \"b\": 255, \"a\": 1\n                    #green \"r\": 130, \"g\": 222, \"b\": 198, \"a\": 1\n                    #yellow \"r\": 254, \"g\": 240, \"b\": 159, \"a\": 1\n                    #red \"r\": 255, \"g\": 161, \"b\": 161, \"a\": 1\n                    #pink \"r\": 255, \"g\": 158, \"b\": 230, \"a\": 1\n                    #purple \"r\": 221, \"g\": 173, \"b\": 255, \"a\": 1\n                    borderColor:{\n                        r:153\n                        g:198\n                        b:255\n                        a:1\n                    }\n                }\n            }\n        )\n        {\n            #return from Canvas:\n            id\n            zIndex\n            name\n            transform {x y scaleX scaleY}\n            pinned\n            style{width height}\n        }\n      }",
+								"query": "mutation myCreateCanvas($ws: String! $canvasName: String! $x: Float! $y: Float!, $width:Float!, $height:Float!) {\n        createCanvas(\n            workspaceId: $ws\n            input: {\n                name: $canvasName\n                transform: {\n                    x:$x \n                    y:$y\n                }\n                style:{\n                    width:$width\n                    height:$height\n                    borderColor:{\n                        r:0\n                        g:0\n                        b:255\n                        a:1\n                    }\n                    fillColor:{\n                        r:153\n                        g:198\n                        b:255\n                        a:1\n                    }\n                }\n            }\n        )\n        {\n            #return from Canvas:\n            id\n            zIndex\n            name\n            transform {x y scaleX scaleY}\n            pinned\n            style{width height}\n        }\n      }",
 								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"canvasName\" : \"Canvas from graphQL\",\n    \"width\":2000,\n    \"height\":1000,\n    \"x\": 0,\n    \"y\": 0\n}"
 							}
 						},
@@ -2574,7 +2562,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "#update shape properties\nmutation myUpdateCanvas($ws: String! $x: Float! $y: Float! $width:Float! $height:Float! $canvasId: String!, $name:String!) {\n    updateCanvas( workspaceId:$ws id:$canvasId input:{\n        name:$name\n        transform:{x:$x y:$y}\n        style:{\n            width:$width\n            height:$height\n            #Valid borderColor are as follows:\n            #blue \"r\": 153, \"g\": 198, \"b\": 255, \"a\": 1\n            #green \"r\": 130, \"g\": 222, \"b\": 198, \"a\": 1\n            #yellow \"r\": 254, \"g\": 240, \"b\": 159, \"a\": 1\n            #red \"r\": 255, \"g\": 161, \"b\": 161, \"a\": 1\n            #pink \"r\": 255, \"g\": 158, \"b\": 230, \"a\": 1\n            #purple \"r\": 221, \"g\": 173, \"b\": 255, \"a\": 1\n            borderColor:{\n                r:255\n                g:161\n                b:161\n                a:1\n            }\n        }\n    })\n    #returning id is mandatory: UpdateElementOutput!\n    {id}\n}",
+								"query": "#update shape properties\nmutation myUpdateCanvas($ws: String! $x: Float! $y: Float! $width:Float! $height:Float! $canvasId: String!, $name:String!) {\n    updateCanvas( workspaceId:$ws id:$canvasId input:{\n        name:$name\n        transform:{x:$x y:$y}\n        style:{\n            width:$width\n            height:$height\n            borderColor:{\n                r:255\n                g:161\n                b:161\n                a:1\n            }\n        }\n    })\n    #returning id is mandatory: UpdateElementOutput!\n    {id}\n}",
 								"variables": "{\n    \"ws\": \"{{workspaceID}}\",\n    \"x\": 0,\n    \"y\": 0,\n    \"width\":1000,\n    \"height\":1000,\n    \"canvasId\" : \"<canvas_elementID>\",\n    \"name\":\"new Canvas Name from graphQL\"\n}"
 							}
 						},
@@ -2806,9 +2794,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"console.log(\"jsonData = \", jsonData.data.createText.id)",
-									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.createText.id);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -2912,9 +2898,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"console.log(\"jsonData = \", jsonData.data.createText.id)",
-									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.createText.id);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -3018,9 +3002,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"console.log(\"jsonData = \", jsonData.data.createText.id)",
-									"postman.setEnvironmentVariable(\"elementID\", jsonData.data.createText.id);"
+									""
 								],
 								"type": "text/javascript"
 							}
