@@ -13,4 +13,4 @@ Note also, that for an element to be moved along with the Canvas, the element mu
 
 ## Contact us
 
-If you have any question or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).
+If you have any questions or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).

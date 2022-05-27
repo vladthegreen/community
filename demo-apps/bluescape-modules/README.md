@@ -23,4 +23,4 @@ uploadUtils.js|Several utilities to make easier the upload of assets into a Canv
 
 ## Contact us
 
-If you have any question or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).
+If you have any questions or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).

@@ -5,7 +5,7 @@ This app will retrieve the text from all sticky notes in the Workspace or in a s
 
 ## Details
 In this application, you will get all the Sticky Notes from a workspace. Please keep in mind that for the purpose of the APIs, there are 2 types of Sticky Notes:
-1. Legacy Sticky Notes: notes created by API or in the workspace before Release *ADD RELEASE*
+1. Legacy Sticky Notes: notes created by API or in the workspace before Release 21.01.1
     - These are identified by getting a list of elements with the filter `type=LegacyNote`
 2. Sticky Notes: the current Notes. 
     - These are Shapes
@@ -13,4 +13,4 @@ In this application, you will get all the Sticky Notes from a workspace. Please 
 
 ## Contact us
 
-If you have any question or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).
+If you have any questions or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).
