@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "db82d9a9-9d7f-453b-811f-ef4fad8254dd",
+		"_postman_id": "c3ab0456-717b-4de4-bcd3-f62f330bcc33",
 		"name": "v3 REST APIs",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8001164"
 	},
 	"item": [
 		{
@@ -58,952 +59,952 @@
 			"description": "calls to validate refresh tokens and get bearer token from auth code.  \n\nYou must get the auth code with:\nhttps://api.apps.us.bluescape.com/authorize?response_type=code&client_id=<client_id>&redirect_uri=<redirect_url>"
 		},
 		{
-			"name": "videoUpload from local",
-			"item": [
-				{
-					"name": "Post - create Video URL",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"console.log(\"jsonData = \", jsonData)",
-									"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
-									"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
-									"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
-									"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
-									"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
-									"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
-									"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
-									"",
-									"postman.setEnvironmentVariable(\"thumb-Amz-uploadId\", jsonData.data.preview.uploadId);",
-									"postman.setEnvironmentVariable(\"thumb-Amz-Key\", jsonData.data.preview.fields.key);",
-									"postman.setEnvironmentVariable(\"thumb-X-Amz-Policy\", jsonData.data.preview.fields.Policy);",
-									"postman.setEnvironmentVariable(\"thumb-X-Amz-Signature\", jsonData.data.preview.fields[\"X-Amz-Signature\"]);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "tokenName",
-									"value": "production",
-									"type": "string"
-								},
-								{
-									"key": "challengeAlgorithm",
-									"value": "S256",
-									"type": "string"
-								},
-								{
-									"key": "useBrowser",
-									"value": true,
-									"type": "boolean"
-								},
-								{
-									"key": "grant_type",
-									"value": "authorization_code",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "{{clientSecret}}",
-									"type": "string"
-								},
-								{
-									"key": "clientId",
-									"value": "{{clientID}}",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "{{API_path}}/authorize",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "client_authentication",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "{{authTokenURL}}",
-									"type": "string"
-								},
-								{
-									"key": "accessToken",
-									"value": "{{token}}",
-									"type": "string"
-								},
-								{
-									"key": "tokenType",
-									"value": "Bearer",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"type\": \"Video\",\n    \"filename\": \"SampleVideo_1280x720_10mb.mp4\",\n    \"title\": \"SampleVideo_1280x720_10mb.mp4\",\n    \"videoFormat\": \"mp4\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 },\n    \"previewFormat\": \"jpeg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
-							"host": [
-								"{{API_path}}"
-							],
-							"path": [
-								"v3",
-								"workspaces",
-								"{{workspaceID}}",
-								"elements"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post - upload to s3 bucket",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"console.log(pm.environment.get(\"Amz-Bucket\"))"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "key",
-									"value": "{{Amz-Key}}",
-									"type": "text"
-								},
-								{
-									"key": "bucket",
-									"value": "{{Amz-Bucket}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Algorithm",
-									"value": "{{X-Amz-Algorithm}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Credential",
-									"value": "{{X-Amz-Credential}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Date",
-									"value": "{{X-Amz-Date}}",
-									"type": "text"
-								},
-								{
-									"key": "Policy",
-									"value": "{{X-Amz-Policy}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Signature",
-									"value": "{{X-Amz-Signature}}",
-									"type": "text"
-								},
-								{
-									"key": "file",
-									"description": "file must match imageFormat from step 1",
-									"type": "file",
-									"src": []
-								}
-							]
-						},
-						"url": {
-							"raw": "{{s3BucketURL}}",
-							"host": [
-								"{{s3BucketURL}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post - upload thumb s3 bucket",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"console.log(pm.environment.get(\"Amz-Bucket\"))"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "key",
-									"value": "{{thumb-Amz-Key}}",
-									"type": "text"
-								},
-								{
-									"key": "bucket",
-									"value": "{{Amz-Bucket}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Algorithm",
-									"value": "{{X-Amz-Algorithm}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Credential",
-									"value": "{{X-Amz-Credential}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Date",
-									"value": "{{X-Amz-Date}}",
-									"type": "text"
-								},
-								{
-									"key": "Policy",
-									"value": "{{thumb-X-Amz-Policy}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Signature",
-									"value": "{{thumb-X-Amz-Signature}}",
-									"type": "text"
-								},
-								{
-									"key": "file",
-									"description": "file must match file previewFormat type from step 1",
-									"type": "file",
-									"src": []
-								}
-							]
-						},
-						"url": {
-							"raw": "{{s3BucketURL}}",
-							"host": [
-								"{{s3BucketURL}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post - upload finalize video upload",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "tokenName",
-									"value": "production",
-									"type": "string"
-								},
-								{
-									"key": "challengeAlgorithm",
-									"value": "S256",
-									"type": "string"
-								},
-								{
-									"key": "useBrowser",
-									"value": true,
-									"type": "boolean"
-								},
-								{
-									"key": "grant_type",
-									"value": "authorization_code",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "{{clientSecret}}",
-									"type": "string"
-								},
-								{
-									"key": "clientId",
-									"value": "{{clientID}}",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "{{API_path}}/authorize",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "client_authentication",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "{{authTokenURL}}",
-									"type": "string"
-								},
-								{
-									"key": "accessToken",
-									"value": "{{token}}",
-									"type": "string"
-								},
-								{
-									"key": "tokenType",
-									"value": "Bearer",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/assets/uploads/{{Amz-uploadId}}",
-							"host": [
-								"{{API_path}}"
-							],
-							"path": [
-								"v3",
-								"workspaces",
-								"{{workspaceID}}",
-								"assets",
-								"uploads",
-								"{{Amz-uploadId}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "imageUpload from local",
-			"item": [
-				{
-					"name": "Post - create Image jpeg",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"console.log(\"jsonData = \", jsonData)",
-									"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
-									"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
-									"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
-									"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
-									"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
-									"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
-									"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
-									"",
-									"",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "tokenName",
-									"value": "production",
-									"type": "string"
-								},
-								{
-									"key": "challengeAlgorithm",
-									"value": "S256",
-									"type": "string"
-								},
-								{
-									"key": "useBrowser",
-									"value": true,
-									"type": "boolean"
-								},
-								{
-									"key": "grant_type",
-									"value": "authorization_code",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "{{clientSecret}}",
-									"type": "string"
-								},
-								{
-									"key": "clientId",
-									"value": "{{clientID}}",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "{{API_path}}/authorize",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "client_authentication",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "{{authTokenURL}}",
-									"type": "string"
-								},
-								{
-									"key": "accessToken",
-									"value": "{{token}}",
-									"type": "string"
-								},
-								{
-									"key": "tokenType",
-									"value": "Bearer",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.jpg\",\n    \"title\": \"postmanImageUPload.jpg\",\n    \"imageFormat\": \"jpeg\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 }\n  }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
-							"host": [
-								"{{API_path}}"
-							],
-							"path": [
-								"v3",
-								"workspaces",
-								"{{workspaceID}}",
-								"elements"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post - create Image tiff",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"console.log(\"jsonData = \", jsonData)",
-									"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
-									"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
-									"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
-									"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
-									"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
-									"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
-									"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
-									"",
-									"",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "tokenName",
-									"value": "production",
-									"type": "string"
-								},
-								{
-									"key": "challengeAlgorithm",
-									"value": "S256",
-									"type": "string"
-								},
-								{
-									"key": "useBrowser",
-									"value": true,
-									"type": "boolean"
-								},
-								{
-									"key": "grant_type",
-									"value": "authorization_code",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "{{clientSecret}}",
-									"type": "string"
-								},
-								{
-									"key": "clientId",
-									"value": "{{clientID}}",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "{{API_path}}/authorize",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "client_authentication",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "{{authTokenURL}}",
-									"type": "string"
-								},
-								{
-									"key": "accessToken",
-									"value": "{{token}}",
-									"type": "string"
-								},
-								{
-									"key": "tokenType",
-									"value": "Bearer",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.tif\",\n    \"title\": \"postmanImageUPload.tif\",\n    \"imageFormat\": \"tif\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 }\n  }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
-							"host": [
-								"{{API_path}}"
-							],
-							"path": [
-								"v3",
-								"workspaces",
-								"{{workspaceID}}",
-								"elements"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post - create Image png",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"console.log(\"jsonData = \", jsonData)",
-									"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
-									"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
-									"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
-									"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
-									"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
-									"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
-									"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
-									"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
-									"",
-									"",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "tokenName",
-									"value": "production",
-									"type": "string"
-								},
-								{
-									"key": "challengeAlgorithm",
-									"value": "S256",
-									"type": "string"
-								},
-								{
-									"key": "useBrowser",
-									"value": true,
-									"type": "boolean"
-								},
-								{
-									"key": "grant_type",
-									"value": "authorization_code",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "{{clientSecret}}",
-									"type": "string"
-								},
-								{
-									"key": "clientId",
-									"value": "{{clientID}}",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "{{API_path}}/authorize",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "client_authentication",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "{{authTokenURL}}",
-									"type": "string"
-								},
-								{
-									"key": "accessToken",
-									"value": "{{token}}",
-									"type": "string"
-								},
-								{
-									"key": "tokenType",
-									"value": "Bearer",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.png\",\n    \"title\": \"postmanImageUPload.png\",\n    \"imageFormat\": \"png\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 },\n    \"width\":1438,\n    \"height\":378\n  }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{public-route}}/v3/workspaces/{{workspaceID}}/elements",
-							"host": [
-								"{{public-route}}"
-							],
-							"path": [
-								"v3",
-								"workspaces",
-								"{{workspaceID}}",
-								"elements"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post - upload to s3 bucket",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"console.log(pm.environment.get(\"Amz-Bucket\"))"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "key",
-									"value": "{{Amz-Key}}",
-									"type": "text"
-								},
-								{
-									"key": "bucket",
-									"value": "{{Amz-Bucket}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Algorithm",
-									"value": "{{X-Amz-Algorithm}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Credential",
-									"value": "{{X-Amz-Credential}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Date",
-									"value": "{{X-Amz-Date}}",
-									"type": "text"
-								},
-								{
-									"key": "Policy",
-									"value": "{{X-Amz-Policy}}",
-									"type": "text"
-								},
-								{
-									"key": "X-Amz-Signature",
-									"value": "{{X-Amz-Signature}}",
-									"type": "text"
-								},
-								{
-									"key": "file",
-									"description": "file must match videoFormat type from step 1",
-									"type": "file",
-									"src": []
-								}
-							]
-						},
-						"url": {
-							"raw": "{{s3BucketURL}}",
-							"host": [
-								"{{s3BucketURL}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post - upload finalize upload",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "tokenName",
-									"value": "production",
-									"type": "string"
-								},
-								{
-									"key": "challengeAlgorithm",
-									"value": "S256",
-									"type": "string"
-								},
-								{
-									"key": "useBrowser",
-									"value": true,
-									"type": "boolean"
-								},
-								{
-									"key": "grant_type",
-									"value": "authorization_code",
-									"type": "string"
-								},
-								{
-									"key": "clientSecret",
-									"value": "{{clientSecret}}",
-									"type": "string"
-								},
-								{
-									"key": "clientId",
-									"value": "{{clientID}}",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "{{API_path}}/authorize",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "client_authentication",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "accessTokenUrl",
-									"value": "{{authTokenURL}}",
-									"type": "string"
-								},
-								{
-									"key": "accessToken",
-									"value": "{{token}}",
-									"type": "string"
-								},
-								{
-									"key": "tokenType",
-									"value": "Bearer",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/assets/uploads/{{Amz-uploadId}}",
-							"host": [
-								"{{API_path}}"
-							],
-							"path": [
-								"v3",
-								"workspaces",
-								"{{workspaceID}}",
-								"assets",
-								"uploads",
-								"{{Amz-uploadId}}"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
 			"name": "workspace content APIs",
 			"item": [
+				{
+					"name": "imageUpload from local",
+					"item": [
+						{
+							"name": "Step1: create Image jpeg",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"console.log(\"jsonData = \", jsonData)",
+											"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
+											"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
+											"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
+											"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
+											"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
+											"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
+											"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "tokenName",
+											"value": "production",
+											"type": "string"
+										},
+										{
+											"key": "challengeAlgorithm",
+											"value": "S256",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "clientSecret",
+											"value": "{{clientSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "{{clientID}}",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "{{API_path}}/authorize",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "{{authTokenURL}}",
+											"type": "string"
+										},
+										{
+											"key": "accessToken",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.jpg\",\n    \"title\": \"postmanImageUPload.jpg\",\n    \"imageFormat\": \"jpeg\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 }\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+									"host": [
+										"{{API_path}}"
+									],
+									"path": [
+										"v3",
+										"workspaces",
+										"{{workspaceID}}",
+										"elements"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Step1: create Image tiff",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"console.log(\"jsonData = \", jsonData)",
+											"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
+											"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
+											"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
+											"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
+											"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
+											"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
+											"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "tokenName",
+											"value": "production",
+											"type": "string"
+										},
+										{
+											"key": "challengeAlgorithm",
+											"value": "S256",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "clientSecret",
+											"value": "{{clientSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "{{clientID}}",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "{{API_path}}/authorize",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "{{authTokenURL}}",
+											"type": "string"
+										},
+										{
+											"key": "accessToken",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.tif\",\n    \"title\": \"postmanImageUPload.tif\",\n    \"imageFormat\": \"tif\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 }\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+									"host": [
+										"{{API_path}}"
+									],
+									"path": [
+										"v3",
+										"workspaces",
+										"{{workspaceID}}",
+										"elements"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Step1: create Image png",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"console.log(\"jsonData = \", jsonData)",
+											"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
+											"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
+											"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
+											"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
+											"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
+											"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
+											"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "tokenName",
+											"value": "production",
+											"type": "string"
+										},
+										{
+											"key": "challengeAlgorithm",
+											"value": "S256",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "clientSecret",
+											"value": "{{clientSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "{{clientID}}",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "{{API_path}}/authorize",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "{{authTokenURL}}",
+											"type": "string"
+										},
+										{
+											"key": "accessToken",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"Image\",\n    \"filename\": \"postmanImageUPload.png\",\n    \"title\": \"postmanImageUPload.png\",\n    \"imageFormat\": \"png\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 },\n    \"width\":1438,\n    \"height\":378\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+									"host": [
+										"{{API_path}}"
+									],
+									"path": [
+										"v3",
+										"workspaces",
+										"{{workspaceID}}",
+										"elements"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Step2: upload to s3 bucket",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(pm.environment.get(\"Amz-Bucket\"))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "key",
+											"value": "{{Amz-Key}}",
+											"type": "text"
+										},
+										{
+											"key": "bucket",
+											"value": "{{Amz-Bucket}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Algorithm",
+											"value": "{{X-Amz-Algorithm}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Credential",
+											"value": "{{X-Amz-Credential}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Date",
+											"value": "{{X-Amz-Date}}",
+											"type": "text"
+										},
+										{
+											"key": "Policy",
+											"value": "{{X-Amz-Policy}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Signature",
+											"value": "{{X-Amz-Signature}}",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"description": "file must match videoFormat type from step 1",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{s3BucketURL}}",
+									"host": [
+										"{{s3BucketURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Step3: upload finalize upload",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "tokenName",
+											"value": "production",
+											"type": "string"
+										},
+										{
+											"key": "challengeAlgorithm",
+											"value": "S256",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "clientSecret",
+											"value": "{{clientSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "{{clientID}}",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "{{API_path}}/authorize",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "{{authTokenURL}}",
+											"type": "string"
+										},
+										{
+											"key": "accessToken",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/assets/uploads/{{Amz-uploadId}}",
+									"host": [
+										"{{API_path}}"
+									],
+									"path": [
+										"v3",
+										"workspaces",
+										"{{workspaceID}}",
+										"assets",
+										"uploads",
+										"{{Amz-uploadId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "videoUpload from local",
+					"item": [
+						{
+							"name": "Step1: create Video URL",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"console.log(\"jsonData = \", jsonData)",
+											"console.log(\"X-Amz-Algorithm = \" + jsonData.data.content.fields['X-Amz-Algorithm'])",
+											"postman.setEnvironmentVariable(\"Amz-uploadId\", jsonData.data.content.uploadId);",
+											"postman.setEnvironmentVariable(\"s3BucketURL\", jsonData.data.content.url);",
+											"postman.setEnvironmentVariable(\"Amz-Key\", jsonData.data.content.fields.key);",
+											"postman.setEnvironmentVariable(\"Amz-Bucket\", jsonData.data.content.fields.bucket);",
+											"postman.setEnvironmentVariable(\"X-Amz-Algorithm\", jsonData.data.content.fields[\"X-Amz-Algorithm\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Credential\", jsonData.data.content.fields[\"X-Amz-Credential\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Date\", jsonData.data.content.fields[\"X-Amz-Date\"]);",
+											"postman.setEnvironmentVariable(\"X-Amz-Policy\", jsonData.data.content.fields.Policy);",
+											"postman.setEnvironmentVariable(\"X-Amz-Signature\", jsonData.data.content.fields[\"X-Amz-Signature\"]);",
+											"",
+											"postman.setEnvironmentVariable(\"thumb-Amz-uploadId\", jsonData.data.preview.uploadId);",
+											"postman.setEnvironmentVariable(\"thumb-Amz-Key\", jsonData.data.preview.fields.key);",
+											"postman.setEnvironmentVariable(\"thumb-X-Amz-Policy\", jsonData.data.preview.fields.Policy);",
+											"postman.setEnvironmentVariable(\"thumb-X-Amz-Signature\", jsonData.data.preview.fields[\"X-Amz-Signature\"]);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "tokenName",
+											"value": "production",
+											"type": "string"
+										},
+										{
+											"key": "challengeAlgorithm",
+											"value": "S256",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "clientSecret",
+											"value": "{{clientSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "{{clientID}}",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "{{API_path}}/authorize",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "{{authTokenURL}}",
+											"type": "string"
+										},
+										{
+											"key": "accessToken",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"Video\",\n    \"filename\": \"SampleVideo_1280x720_10mb.mp4\",\n    \"title\": \"SampleVideo_1280x720_10mb.mp4\",\n    \"videoFormat\": \"mp4\",\n    \"transform\": { \"x\": 300, \"y\": 100, \"scale\": 1 },\n    \"previewFormat\": \"jpeg\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/elements",
+									"host": [
+										"{{API_path}}"
+									],
+									"path": [
+										"v3",
+										"workspaces",
+										"{{workspaceID}}",
+										"elements"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Step2: upload to s3 bucket",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(pm.environment.get(\"Amz-Bucket\"))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "key",
+											"value": "{{Amz-Key}}",
+											"type": "text"
+										},
+										{
+											"key": "bucket",
+											"value": "{{Amz-Bucket}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Algorithm",
+											"value": "{{X-Amz-Algorithm}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Credential",
+											"value": "{{X-Amz-Credential}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Date",
+											"value": "{{X-Amz-Date}}",
+											"type": "text"
+										},
+										{
+											"key": "Policy",
+											"value": "{{X-Amz-Policy}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Signature",
+											"value": "{{X-Amz-Signature}}",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"description": "file must match imageFormat from step 1",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{s3BucketURL}}",
+									"host": [
+										"{{s3BucketURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Step3: upload thumb s3 bucket",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(pm.environment.get(\"Amz-Bucket\"))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "key",
+											"value": "{{thumb-Amz-Key}}",
+											"type": "text"
+										},
+										{
+											"key": "bucket",
+											"value": "{{Amz-Bucket}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Algorithm",
+											"value": "{{X-Amz-Algorithm}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Credential",
+											"value": "{{X-Amz-Credential}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Date",
+											"value": "{{X-Amz-Date}}",
+											"type": "text"
+										},
+										{
+											"key": "Policy",
+											"value": "{{thumb-X-Amz-Policy}}",
+											"type": "text"
+										},
+										{
+											"key": "X-Amz-Signature",
+											"value": "{{thumb-X-Amz-Signature}}",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"description": "file must match file previewFormat type from step 1",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{s3BucketURL}}",
+									"host": [
+										"{{s3BucketURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Step4: upload finalize video upload",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "tokenName",
+											"value": "production",
+											"type": "string"
+										},
+										{
+											"key": "challengeAlgorithm",
+											"value": "S256",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": true,
+											"type": "boolean"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "clientSecret",
+											"value": "{{clientSecret}}",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "{{clientID}}",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "{{API_path}}/authorize",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "{{authTokenURL}}",
+											"type": "string"
+										},
+										{
+											"key": "accessToken",
+											"value": "{{token}}",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_path}}/v3/workspaces/{{workspaceID}}/assets/uploads/{{Amz-uploadId}}",
+									"host": [
+										"{{API_path}}"
+									],
+									"path": [
+										"v3",
+										"workspaces",
+										"{{workspaceID}}",
+										"assets",
+										"uploads",
+										"{{Amz-uploadId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "get workspace elements snapshot when time",
 					"request": {
@@ -1451,9 +1452,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"/*",
-									"Note: alpha channel is always on",
-									"*/"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -1518,7 +1517,6 @@
 									"value": "{{token}}",
 									"type": "string"
 								}
-
 							]
 						},
 						"method": "POST",
@@ -1637,7 +1635,7 @@
 					"response": []
 				},
 				{
-					"name": "Create Sticky Shape",
+					"name": "Create Sticky Shape (Notecard)",
 					"request": {
 						"auth": {
 							"type": "oauth2",
@@ -1927,9 +1925,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"/*",
-									"Note: alpha channel is always on",
-									"*/"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -2029,9 +2025,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"/*",
-									"Note: alpha channel is always on",
-									"*/"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -2131,9 +2125,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"/*",
-									"Note: alpha channel is always on",
-									"*/"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -2322,9 +2314,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"/*",
-									"Note: alpha channel is always on",
-									"*/"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -2424,9 +2414,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"/*",
-									"Note: alpha channel is always on",
-									"*/"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -2497,7 +2485,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": " {\n    \"type\": \"Canvas\",\n    \"name\":\"created from REST\",\n    \"pinned\":false,\n    \"style\":{\n        \"borderColor\": { \"r\": 238, \"g\": 85, \"b\": 80, \"a\": 1},\n        \"height\":2000,\n        \"width\":2000\n    },\n    \"transform\": {\n        \"x\": 0,\n        \"y\": 0\n    }\n}",
+							"raw": " {\n    \"type\": \"Canvas\",\n    \"name\":\"created from REST\",\n    \"pinned\":false,\n    \"style\":{\n        \"borderColor\": { \"r\": 255, \"g\": 95, \"b\": 90, \"a\": 1},\n        \"fillColor\": { \"r\": 238, \"g\": 85, \"b\": 80, \"a\": 1},\n        \"height\":2000,\n        \"width\":2000\n    },\n    \"transform\": {\n        \"x\": 0,\n        \"y\": 0\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
