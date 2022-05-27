@@ -14,4 +14,4 @@ We strongly recommend you to visit the [Bluescape Developer portal](https://deve
 
 ## Contact us
 
-Let us know your questions, comments and ideas in our [Bluescape Community site](https://community.bluescape.com/).
+If you have any question or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).

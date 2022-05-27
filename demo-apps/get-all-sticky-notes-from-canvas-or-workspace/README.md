@@ -10,3 +10,7 @@ In this application, you will get all the Sticky Notes from a workspace. Please 
 2. Sticky Notes: the current Notes. 
     - These are Shapes
     - They have a specific field to identify them: `'kind': 'sticky-rectangle'`
+
+## Contact us
+
+If you have any question or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).

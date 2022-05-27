@@ -30,3 +30,7 @@ See `get-external-users.js` for further details.
 
 ## Web Based
 See the [README](./web-app/README.md) file under the `web-app` folder for details about a sample web UI for this app.
+
+## Contact us
+
+If you have any question or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).

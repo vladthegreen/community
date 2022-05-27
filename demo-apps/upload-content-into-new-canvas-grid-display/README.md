@@ -126,4 +126,6 @@ modules/
             node upload-content-into-new-canvas-grid-display.graphql.js --token='<SET-ACESS-TOKEN>' --uploadMethod=LOCAL --assetsToUploadByUrl='https://s3.amazonaws.com/webclienttest.bluescape.com/share/images/landscape.jpg|https://s3.amazonaws.com/webclienttest.bluescape.com/share/images/18.jpg' --workspaceid=WTQHcY3tVb68fycvtpn9 --canvasName='Files upload #2'
             ```
 
+## Contact us
 
+If you have any question or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).
