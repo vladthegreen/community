@@ -26,4 +26,4 @@ Name | APIs | Main steps to perform
 
 ## Contact us
 
-If you have any question or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/).
+If you have any questions or comments, please contact us in our [Bluescape Community site](https://community.bluescape.com/c/developer/14).
