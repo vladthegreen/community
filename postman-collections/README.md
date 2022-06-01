@@ -3,10 +3,10 @@ This folder contains a set of Postman Collections that exemplify the use of the 
 # Contents of this folder
 File | Description| Comments
 ---|---|---
-v3 REST APIs.postman_collection.json|Collection with examples for v3 REST APIs|
-v3 graphQL Public.postman_collection.json|Collection with examples for GraphQL APIs|
-production.bluescape.com.postman_environment.json|Environmental variables for the Bluescape Production environment|These variables will be used for the generation of Access Tokens and for storing results used in some examples of APIs.
-production_federated_gql_schema.graphql|GraphQL Schema|This schema will facilitate writing GraphQL queries, mutations and subscriptions
+[v3_REST_APIs.postman_collection.json](./v3_REST_APIs.postman_collection.json)|Collection with examples for v3 REST APIs|
+[v3_graphQL_APIs.postman_collection.json](./v3_graphQL_APIs.postman_collection.json)|Collection with examples for GraphQL APIs|
+[production.bluescape.com.postman_environment.json](./production.bluescape.com.postman_environment.json)|Environmental variables for the Bluescape Production environment|These variables will be used for the generation of Access Tokens and for storing results used in some examples of APIs.
+[production_federated_gql_schema.graphql](./production_federated_gql_schema.graphql)|GraphQL Schema|This schema will facilitate writing GraphQL queries, mutations and subscriptions
 
 # Interesting examples
 
